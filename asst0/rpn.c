@@ -4,9 +4,10 @@
 #include <scanner.h>
 
 int main(){
-    while (yylex()!=NEWLINE){
-        printf("%s\n",yytext);
+    while(1){
+        while (yylex()!=NEWLINE){
+            printf("%s\n",yytext);
+        }
     }
-     
     return 0;
 }
