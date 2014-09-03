@@ -2,12 +2,14 @@
 #include <stdio.h>
 #include <string.h>
 #include <scanner.h>
+#include <stack.h>
 
 int main(){
   stack s;
   int alive=1;
   while(alive){
-      while (int token_type=yylex()!=NEWLINE){
+	  int token_type = 0;
+      while (token_type = yylex()!=NEWLINE){
 	  printf("%s, type %d\n",yytext, token_type);
 	  //all the cases:
 	  switch(token_type){

@@ -21,7 +21,7 @@ Element new_element(int type, void * value){
     Element e;
     e.type=type;
     e.value=malloc(SIZE);
-    memcpy(e.value,value,size);
+    memcpy(e.value,value,SIZE); //SIZE was size Sept 3 6:54pm - Eriya
 }
 
 void destroy_element(Element e){
