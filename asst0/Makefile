@@ -1,14 +1,9 @@
-CFLAGS=-O3
+CC=gcc
+CFLAGS="-Wall"
 
-INCLUDE=-I.
-
-all: rpn
-
-rpn: scanner.c rpn.c
-	$(CC) scanner.c rpn.c $(INCLUDE) $(CFLAGS) -o rpn
-
-scanner.c: scanner.ll scanner.h
-	flex scanner.ll && mv lex.yy.c scanner.c
-
+debug:clean
+	$(CC) $(CFLAGS) -g -o asst0 main.c
+stable:clean
+	$(CC) $(CFLAGS) -o asst0 main.c
 clean:
-	rm scanner.c rpn
+	rm -vfr *~ asst0

@@ -14,7 +14,7 @@
 
 typedef struct{
     Element elem[STACK_SIZE];
-    Element top;
+    int top_pointer;
 }stack;
 
 Element top(stack * s);
