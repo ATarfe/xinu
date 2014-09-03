@@ -8,7 +8,7 @@ int main(){
   stack s;
   int alive=1;
   while(alive){
-	  int token_type = 0;
+	  int token_type = -1;
       while (token_type = yylex()!=NEWLINE){
 	  printf("%s, type %d\n",yytext, token_type);
 	  //all the cases:
