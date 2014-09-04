@@ -24,7 +24,9 @@ int push(stack * s, void * element_value, int type){
 }
 int pop(stack * s){
   if(s->top_pointer>0){
+    // TO-DO: Get top of stack
     destroy_element(s->elem[s->top_pointer--]);
+    // TO-DO: Return top of stack
   }
   else{
     fprintf(stderr,"stack size is 0, cannot pop.\n");

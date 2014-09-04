@@ -14,11 +14,11 @@
 
 typedef struct{
     Element elem[STACK_SIZE];
-    int top_pointer;
+    int top_pointer; // Is this current index (top location) of stack? - Eriya
 }stack;
 
 Element top(stack * s);
 int push(stack * s, void * element_value, int type);
-int pop(stack * s);
+int pop(stack * s); // Shouldn't it return whatever's on the stack?
 
 #endif

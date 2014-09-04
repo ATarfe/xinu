@@ -10,7 +10,7 @@ Element new_element(int type, void * value){
   Element e;
   e.type=type;
   e.value=malloc(SIZE);
-  memcpy(e.value,value,SIZE); //SIZE was size Sept 3 6:54pm - Eriya
+  memcpy(e.value,value,sizeof(e)); //sizeof(e) was size Sept 3 6:54pm - Eriya
 }
 
 void destroy_element(Element e){
@@ -29,14 +29,24 @@ void destroy_element(Element e){
  */
 
 int calculate(stack* s, int operator_type){
-  printf("%d\n", operator_type);
- 
+  //int first_popped = pop(s);
+  
+  printf("The operator_type was: %d\n", operator_type);
+  //printf("First popped was: %d\n", first_popped);
+  
   return 0;
 }
  
 
 int main(){
   stack s;
+  s.top_pointer = 0;
+  
+  
+  int x = 1;
+  int y = 5;
+  push(&s, &x, INT_B10);
+  push(&s, &y, INT_B10);
   calculate(&s, 0);
   
   
