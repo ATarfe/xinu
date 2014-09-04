@@ -4,9 +4,9 @@
  * Sept 2 2014
  * stack.c file
  */
-#include <scanner.h>
-#include <rpn.h>
-#include <stack.h>
+#include "scanner.h"
+#include "rpn.h"
+#include "stack.h"
 #include <stdio.h>
 
 Element top(stack * s){
@@ -23,7 +23,7 @@ int push(stack * s, void * element_value, int type){
   }
 }
 int pop(stack * s){
-  if(top_pointer>0){
+  if(s->top_pointer>0){
     destroy_element(s->elem[s->top_pointer--]);
   }
   else{

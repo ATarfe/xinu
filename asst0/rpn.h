@@ -7,7 +7,7 @@
 
 #ifndef __RPN_H__
 #define __RPN_H__
-#include <scanner.h>
+#include "scanner.h"
 
 #define SIZE 32
 
@@ -16,16 +16,19 @@ typedef struct{
     void * value;
 }Element;
 
-//TODO: put implementation somewhere else
-Element new_element(int type, void * value){
-    Element e;
-    e.type=type;
-    e.value=malloc(SIZE);
-    memcpy(e.value,value,SIZE); //SIZE was size Sept 3 6:54pm - Eriya
-}
+Element new_element(int type, void * value);
 
-void destroy_element(Element e){
-    free(e.value);
-}  
-
+/*
+ //TODO: put implementation somewhere else
+ Element new_element(int type, void * value){
+ Element e;
+ e.type=type;
+ e.value=malloc(SIZE);
+ memcpy(e.value,value,SIZE); //SIZE was size Sept 3 6:54pm - Eriya
+ }
+ 
+ void destroy_element(Element e){
+ free(e.value);
+ }
+ */
 #endif

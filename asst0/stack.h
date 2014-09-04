@@ -8,7 +8,7 @@
 #ifndef __STACK_H__
 #define __STACK_H__
 
-#include <rpn.h>
+#include "rpn.h"
 
 #define STACK_SIZE 1024
 
@@ -18,7 +18,7 @@ typedef struct{
 }stack;
 
 Element top(stack * s);
-int push(stack * s);
+int push(stack * s, void * element_value, int type);
 int pop(stack * s);
 
 #endif
