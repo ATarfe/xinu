@@ -11,6 +11,7 @@
   
 #include <stdio.h>
 #include <string.h>
+#include <hello.h>
   
   
 shellcmd xsh_hello(int nargs, char *args[])
@@ -27,7 +28,7 @@ shellcmd xsh_hello(int nargs, char *args[])
 		return SYSERR;
 	}
 	else{
-		printf("Hello %s, Welcome to the world of Xinu!!\n", args[1]);
+    printHello(args[1]);
 		return OK;
 	}
 }

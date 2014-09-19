@@ -8,7 +8,7 @@ PLATFORM = raspberry-pi
 # PLATFORM = arm-qemu
 
 NODE=12
-USERNAME=eterada
+USERNAME=yz79
 
 DETAIL   = -DDETAIL
 
@@ -122,9 +122,9 @@ docs:
 	${DOCGEN} ${DOCGEN_CONFIG}
 
 download:
-	ssh cyclops rm -f /home/tftpboot/rpi${NODE}.img
+	ssh yz79@cyclops rm -f /home/tftpboot/rpi${NODE}.img
 	scp xinu.bin ${USERNAME}@cyclops:/home/tftpboot/rpi${NODE}.img
-	ssh cyclops chmod go+rw /home/tftpboot/rpi${NODE}.img
+	ssh yz79@cyclops chmod go+rw /home/tftpboot/rpi${NODE}.img
 	rpipower off ${NODE}
 	sleep 1
 	rpipower on ${NODE}
