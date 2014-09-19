@@ -25,7 +25,7 @@ shellcmd xsh_hello(int nargs, char *args[])
 		printf("Usage:\n");
 		printf("hello <string>\n");
 		return SYSERR;
-
+	}
 	else{
 		printf("Hello %s, Welcome to the world of Xinu!!\n", args[1]);
 		return OK;
