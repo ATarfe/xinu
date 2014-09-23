@@ -53,22 +53,26 @@ void populate_matrix(int *matrix, int size){
  * the second matrix being multiplied.
  * @param output
  */
-void matrix_mult(int * output, uint8_t print_current_indices){
+void matrix_mult(matrix_mult_struct * input){
   //get the matrices from the global mem:
+  int * output=input->output;
+  uint8_t *print_current_indices=input->print_current_indices;
+  uint8_t *stop=input->stop;
   int i,j,k;
   for(i=0;i<DIM;i++){
     for(j=0;j<DIM;j++){
       int sum=0;
       for(k=0;k<DIM;k++){
+        while(*stop);
         sum+=(matrix1[i*DIM+k]*matrix2[j*DIM+k]);
         /*
          * if another thread has set print_current_indices to non-zero,
          * print current indices
          * and then change that variable to 0
          */
-        if(print_current_indices){
+        if(*print_current_indices){
           printf("%d, %d, %d\n", i,j,k);
-          print_current_indices=0;
+          *print_current_indices=0;
         }
       }
       output[i*DIM+j]=sum;

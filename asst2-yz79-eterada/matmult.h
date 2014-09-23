@@ -10,7 +10,14 @@
 
 #include <stdint.h>
 #define DIM 2048
+
+typedef struct{
+  int * output;
+  uint8_t *print_current_indices;
+  uint8_t *stop;
+}matrix_mult_struct;
+
 int matrix1[DIM*DIM];
 int matrix2[DIM*DIM];
 void populate_matrix(int *matrix, int size);
-void matrix_mult(int * output, uint8_t);
+void matrix_mult(matrix_mult_struct * input);
