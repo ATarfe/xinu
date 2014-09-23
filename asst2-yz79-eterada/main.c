@@ -18,9 +18,13 @@ int main(){
   scrollok(default_win,TRUE);
   
   char buffer[10];
+  int input = 0;
   
-  printw("=>");
-  int input=getch();
+  // place holder for calculating matrices...
+  do{
+    printw("Calculate matrices...\n");
+  }while ((input = getch()) !='q');
+  
 
   // While program is not told to quit
   while (input != 'q' && input != 'Q'){
