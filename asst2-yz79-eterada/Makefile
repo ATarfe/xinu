@@ -1,8 +1,8 @@
-CFLAGS=-O2 -lm -g 
+CFLAGS=-O2 -lm -g -fopenmp -pthread
 
 INCLUDE=-Incurses/include
 
-LDFLAGS=-Lncurses/lib -lncurses -ldl
+LDFLAGS=-Lncurses/lib -lncurses -ldl 
 
 OBJS=main.o matmult.o
 
@@ -14,7 +14,7 @@ main: ${OBJS}
 	$(CC) ${OBJS} $(INCLUDE) $(CFLAGS) $(LDFLAGS) -o main
 
 clean:
-	rm -f *.o
+	rm -f *.o main
 
 distclean:
 	rm -f main *.o 

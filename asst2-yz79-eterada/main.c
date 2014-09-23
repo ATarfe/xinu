@@ -8,10 +8,12 @@
  */
 
 #include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
 #include <curses.h>
 #include <sys/time.h>
 #include <unistd.h>
-#include <pthreads.h>
+#include <pthread.h>
 #include "matmult.h"
 
 //
@@ -46,6 +48,7 @@ int worker(char input){
   if (input == 's' || input == 'S'){
     printw("\nCalculation stopped.\n");
     *m_struct.stop = 1; // set stop flag in m_struct to 1
+    return 1;
 
   }
   
@@ -53,9 +56,16 @@ int worker(char input){
   if (input == 't' || input == 'T'){
     printw("\n");
     *m_struct.stop = 0; // set stop flag in m_struct to 0, i.e. continue calculation
+    return 1;
   }
-  
-  return 0;
+
+  // Make sure that the alive flag in m_struct is set to false
+  // before exiting.
+  if (input == 'q' || input == 'Q'){
+    *m_struct.alive = 0;
+    return 0;
+  }
+  return -1;
 }
 
 
@@ -85,7 +95,7 @@ void read_from_file(){
  */
 int main(){
   // Allocate memory for stuff in m_struct
-  m_struct.output = malloc(DIM*DIM*4)
+  m_struct.output = malloc(DIM*DIM*4);
   m_struct.print_current_indices = malloc(sizeof(uint8_t));
   m_struct.stop = malloc(sizeof(uint8_t));
   m_struct.alive = malloc(sizeof(uint8_t));
@@ -103,7 +113,7 @@ int main(){
   
   // Create thread
   pthread_t thread;
-  pthread_create(&thread, NULL, &matrix_mult, &m_struct);
+  pthread_create(&thread, NULL, (void*)matrix_mult, (void*)(&m_struct));
   
   //first, initialize curses
   WINDOW * default_win=initscr();
@@ -113,14 +123,14 @@ int main(){
   int input = 0;
   
   // Do worker while input is not 'q' or 'Q'
-  do{
-    worker(input);
-  }while ((input = getch()) != 'q' && (input != 'Q'));
-
-  // Make sure that the alive flag in m_struct is set to false
-  // before exiting.
-  if (input == 'q' || input == 'Q'){
-    *m_struct.alive = 0;
+  while(input=getch()){
+    //if return value of worker is 0, we know that the process is done.
+    //therefore break out of the loop.
+    if(worker(input)){
+      continue;
+    }
+    else break;
+    //otherwise continue
   }
   
   // Join threads
@@ -128,7 +138,6 @@ int main(){
   
   // end curses window
   endwin();
-  
   
   // Free stuff!!!
   free(m_struct.output);

@@ -8,6 +8,7 @@
  * contains methods to initialize and multiply matrices
  */
 #include <stdlib.h>
+#include <string.h>
 #include <math.h>
 #include <stdio.h>
 #include <sys/time.h>
@@ -51,8 +52,8 @@ void populate_matrix(int *matrix, int size){
  * writes the input to file: output.txt
  * @param input
  */
-void write_to_file(int *input, int size){
-  FILE *fd=fopen("output.txt","w");
+void write_to_file(char* filename,int *input, int size){
+  FILE *fd=fopen(filename,"w");
   int i;
   for(i=0;i<size;i++){
     fprintf(fd,"%d ",input[i]);
@@ -67,7 +68,7 @@ void write_to_file(int *input, int size){
  * the second matrix being multiplied.
  * @param output
  */
-void matrix_mult(matrix_mult_struct * input){
+void * matrix_mult(matrix_mult_struct * input){
   //get the matrices from the global mem:
   int * output=input->output;
   uint8_t *print_current_indices=input->print_current_indices;
@@ -99,7 +100,7 @@ void matrix_mult(matrix_mult_struct * input){
     }
     if(*(input->tofile)){
       //call write to file and exit:
-      write_to_file("output.txt",output);
+      write_to_file("output.txt",output,DIM*DIM);
       *(input->alive)=0;
       return;
     }

@@ -9,7 +9,7 @@
  */
 
 #include <stdint.h>
-#define DIM 2048
+#define DIM 32 
 
 typedef struct{
   int * output;
@@ -22,4 +22,4 @@ typedef struct{
 int matrix1[DIM*DIM];
 int matrix2[DIM*DIM];
 void populate_matrix(int *matrix, int size);
-void matrix_mult(matrix_mult_struct * input);
+void * matrix_mult (matrix_mult_struct * input);
