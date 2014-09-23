@@ -9,8 +9,8 @@
 
 #include <stdio.h>
 #include <curses.h>
-
-
+#include <sys/time.h>
+#include <unistd.h>
 
 
 int worker(char input){
@@ -34,6 +34,23 @@ int worker(char input){
   }
   
   return 0;
+}
+
+
+/**
+ * reads input from the file "sharedfile.txt"
+ * and sends the input stream to the "worker" function
+ */
+void read_from_file(){
+  //open sharedfile.txt
+  FILE *fd=fopen("sharedfile.txt","r");
+  char buf[2048];
+  fscanf(fd, "%s",buf);
+  int i;
+  for(i=0;i<strlen(buf);i++){
+    worker(buf[i]);
+  }
+  fclose(fd);
 }
 
 int main(){
