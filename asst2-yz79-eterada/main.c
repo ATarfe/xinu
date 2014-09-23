@@ -12,30 +12,49 @@
 
 
 
-
+/*
+ * worker(char input) -> int
+ *
+ * The worker function. Takes as input a character that was passed by
+ * main. Unless specified by the input, this function will repeatedly
+ * multiply two large matricies.
+ *
+ */
 int worker(char input){
-  
+  // Multiply two large matrices
   printw("Calculating matrices...\n");
   
-  if (input == 'z'){
+  // If input is 'z' or 'Z', complete current matrix-multiply,
+  // save its results to FILE and terminate.
+  if (input == 'z' || input == 'Z'){
     printw("Calculate curent multiplication, save, and quit\n");
     /* TO-DO: write to file */
     endwin();
     return 0;
   }
   
-  if (input == 's'){
+  // If input is 's' or 'S', the program will stop multiplying matrices
+  if (input == 's' || input == 'S'){
     printw("\nCalculation stopped.\n");
     input = getch();
   }
   
-  if (input == 't'){
+  // If input is 't' or 'T', the program will continue multiplying matrices
+  if (input == 't' || input == 'T'){
     printw("\n");
   }
   
   return 0;
 }
 
+
+/*
+ * main() -> int
+ *
+ * The main function. Initializes curses for character input, and then
+ * calls worker repeatedly until the user enters 'q' or 'Q'
+ *
+ */
 int main(){
   
   //first, initialize curses
