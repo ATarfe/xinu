@@ -1,13 +1,19 @@
+/*
+ * Assignment 2
+ *
+ * Author: Peter Zhang (yz79), Eriya Terada (eterada)
+ * CSCI P536 FA14 ASST0
+ * Sept 23 2014
+ * matmult.c file
+ * contains methods to initialize and multiply matrices
+ */
 #include <stdlib.h>
 #include <math.h>
 #include <stdio.h>
 #include <sys/time.h>
 #include <omp.h>
 
-#define DIM 2 
-int matrix1[DIM*DIM];
-int matrix2[DIM*DIM];
-
+#include "matmult.h"
 /**
  * rand_int function
  * designed for multithreaded program
@@ -47,7 +53,7 @@ void populate_matrix(int *matrix, int size){
  * the second matrix being multiplied.
  * @param output
  */
-void matrix_mult(int * output){
+void matrix_mult(int * output, uint8_t print_current_indices){
   //get the matrices from the global mem:
   int i,j,k;
   for(i=0;i<DIM;i++){
@@ -55,25 +61,17 @@ void matrix_mult(int * output){
       int sum=0;
       for(k=0;k<DIM;k++){
         sum+=(matrix1[i*DIM+k]*matrix2[j*DIM+k]);
+        /*
+         * if another thread has set print_current_indices to non-zero,
+         * print current indices
+         * and then change that variable to 0
+         */
+        if(print_current_indices){
+          printf("%d, %d, %d\n", i,j,k);
+          print_current_indices=0;
+        }
       }
       output[i*DIM+j]=sum;
     }
   }
-}
-
-int main(){
-  populate_matrix(matrix1,DIM*DIM);
-  populate_matrix(matrix2,DIM*DIM);
-  int i,j;
-  for(i=0;i<DIM*DIM;i++)
-    printf("%d ",matrix1[i]);
-  for(i=0;i<DIM*DIM;i++)
-    printf("%d ",matrix2[i]);
-  printf("\n");
-  int *da=malloc(16);
-  matrix_mult(da);
-  for(i=0;i<DIM*DIM;i++)
-    printf("%d ",da[i]);
-  free(da);
-  return 0;
 }
