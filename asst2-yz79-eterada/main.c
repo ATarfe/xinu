@@ -11,27 +11,45 @@
 #include <curses.h>
 
 
+
+
+int worker(char input){
+  
+  printw("Calculating matrices...\n");
+  
+  if (input == 'z'){
+    printw("Calculate curent multiplication, save, and quit\n");
+    /* TO-DO: write to file */
+    endwin();
+    return 0;
+  }
+  
+  if (input == 's'){
+    printw("\nCalculation stopped.\n");
+    input = getch();
+  }
+  
+  if (input == 't'){
+    printw("\n");
+  }
+  
+  return 0;
+}
+
 int main(){
   
   //first, initialize curses
   WINDOW * default_win=initscr();
   scrollok(default_win,TRUE);
   
-  char buffer[10];
+  // Initially input is just 0
   int input = 0;
   
-  // place holder for calculating matrices...
+  // Do worker while input is not 'q' or 'Q'
   do{
-    printw("Calculate matrices...\n");
-  }while ((input = getch()) !='q');
-  
+    worker(input);
+  }while ((input = getch()) != 'q' && (input != 'Q'));
 
-  // While program is not told to quit
-  while (input != 'q' && input != 'Q'){
-    printw("Calculate matrices...\n");
-    refresh();
-  }
-  
   endwin();
   return 0;
 }
