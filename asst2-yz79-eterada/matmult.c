@@ -47,6 +47,20 @@ void populate_matrix(int *matrix, int size){
 }
 
 /**
+ * write to file function
+ * writes the input to file: output.txt
+ * @param input
+ */
+void write_to_file(int *input, int size){
+  FILE *fd=fopen("output.txt","w");
+  int i;
+  for(i=0;i<size;i++){
+    fprintf(fd,"%d ",input[i]);
+  }
+  fclose(fd);
+}
+
+/**
  * the matrix multiplication method
  * NOTE: we are assuming that matrix2 is already transposed. i.e., the function
  * will use the rows of matrix2 in global memory as if they were the columns of
@@ -75,6 +89,9 @@ void matrix_mult(matrix_mult_struct * input){
           if(*print_current_indices){
             printf("%d, %d, %d\n", i,j,k);
             *print_current_indices=0;
+          }
+          if(*alive==0){
+            return;
           }
         }
         output[i*DIM+j]=sum;
