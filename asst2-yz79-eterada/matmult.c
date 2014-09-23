@@ -58,24 +58,33 @@ void matrix_mult(matrix_mult_struct * input){
   int * output=input->output;
   uint8_t *print_current_indices=input->print_current_indices;
   uint8_t *stop=input->stop;
+  uint8_t *alive=input->alive;
   int i,j,k;
-  for(i=0;i<DIM;i++){
-    for(j=0;j<DIM;j++){
-      int sum=0;
-      for(k=0;k<DIM;k++){
-        while(*stop);
-        sum+=(matrix1[i*DIM+k]*matrix2[j*DIM+k]);
-        /*
-         * if another thread has set print_current_indices to non-zero,
-         * print current indices
-         * and then change that variable to 0
-         */
-        if(*print_current_indices){
-          printf("%d, %d, %d\n", i,j,k);
-          *print_current_indices=0;
+  while(*alive){
+    for(i=0;i<DIM;i++){
+      for(j=0;j<DIM;j++){
+        int sum=0;
+        for(k=0;k<DIM;k++){
+          while(*stop);
+          sum+=(matrix1[i*DIM+k]*matrix2[j*DIM+k]);
+          /*
+           * if another thread has set print_current_indices to non-zero,
+           * print current indices
+           * and then change that variable to 0
+           */
+          if(*print_current_indices){
+            printf("%d, %d, %d\n", i,j,k);
+            *print_current_indices=0;
+          }
         }
+        output[i*DIM+j]=sum;
       }
-      output[i*DIM+j]=sum;
+    }
+    if(*(input->tofile)){
+      //call write to file and exit:
+      write_to_file("output.txt",output);
+      *(input->alive)=0;
+      return;
     }
   }
 }

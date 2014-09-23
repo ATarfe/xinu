@@ -14,7 +14,9 @@
 typedef struct{
   int * output;
   uint8_t *print_current_indices;
-  uint8_t *stop;
+  uint8_t *stop; //boolean: stop (pause)
+  uint8_t *alive;//boolean: process is currently alive
+  uint8_t *tofile; //boolean: write result to file
 }matrix_mult_struct;
 
 int matrix1[DIM*DIM];
