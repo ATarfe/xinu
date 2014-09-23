@@ -1,10 +1,12 @@
-CFLAGS=-O2 -lm
+CFLAGS=-O2 -lm -g 
 
 INCLUDE=-Incurses/include
 
 LDFLAGS=-Lncurses/lib -lncurses -ldl
 
-OBJS=main.o
+OBJS=main.o matmult.o
+
+CC=gcc
 
 all: main
 
