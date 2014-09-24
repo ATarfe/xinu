@@ -21,5 +21,6 @@ typedef struct{
 
 int matrix1[DIM*DIM];
 int matrix2[DIM*DIM];
+int idx1,idx2,idx3;
 void populate_matrix(int *matrix, int size);
 void * matrix_mult (matrix_mult_struct * input);
