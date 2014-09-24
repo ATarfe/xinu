@@ -160,7 +160,7 @@ int main(){
     else{
       if (input == 's' || input == 'S'){
         printw("\nCalculation stopped.\n");
-        *m_struct.stop = 1; // set stop flag in m_struct to 1
+        *m_struct.print_current_indices = 1; // set stop flag in m_struct to 1
       }
       
       // If input is 't' or 'T', the program will continue multiplying matrices

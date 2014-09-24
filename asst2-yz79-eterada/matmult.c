@@ -81,7 +81,7 @@ void * matrix_mult(matrix_mult_struct * input){
       for(j=0;j<DIM;j++){
         int sum=0;
         for(k=0;k<DIM;k++){
-          while(*stop && (*(input->tofile)==0)){
+          while(*stop && (*(input->tofile)==0) && *alive){
             usleep(500);
           }
           sum+=(matrix1[i*DIM+k]*matrix2[j*DIM+k]);
@@ -93,6 +93,7 @@ void * matrix_mult(matrix_mult_struct * input){
           if(*print_current_indices){
             printf("%d, %d, %d\n", i,j,k);
             *print_current_indices=0;
+            *stop=1;
           }
           if(*alive==0){
             return;
