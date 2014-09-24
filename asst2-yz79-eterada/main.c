@@ -28,7 +28,10 @@ matrix_mult_struct m_struct;
 void *read_from_file(matrix_mult_struct * mstruct){
   //open sharedfile.txt
   uint8_t running=1;
-  while(running){
+  while(running && *mstruct->alive){
+      sleep(1);
+      printw("file\n");
+      refresh();
       FILE *fd=fopen("sharedfile.txt","a+");
       char buf[2048];
       fscanf(fd, "%s",buf);
