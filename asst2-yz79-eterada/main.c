@@ -22,8 +22,6 @@
 //
 matrix_mult_struct m_struct;
 
-
-
 /*
  * worker(char input) -> int
  *
@@ -32,10 +30,11 @@ matrix_mult_struct m_struct;
  * multiply two large matricies.
  *
  */
-int worker(char input){
+void worker(char input){
   // Multiply two large matrices
   printw("Calculating matrices...\n");
   
+#if 0
   // If input is 'z' or 'Z', complete current matrix-multiply,
   // save its results to FILE and terminate.
   if (input == 'z' || input == 'Z'){
@@ -43,12 +42,13 @@ int worker(char input){
     *m_struct.tofile = 1; // Set tofile flag in m_struct to 1
     return 0;
   }
+#endif
   
   // If input is 's' or 'S', the program will stop multiplying matrices
   if (input == 's' || input == 'S'){
     printw("\nCalculation stopped.\n");
     *m_struct.stop = 1; // set stop flag in m_struct to 1
-    return 1;
+    //return 1;
 
   }
   
@@ -56,16 +56,17 @@ int worker(char input){
   if (input == 't' || input == 'T'){
     printw("\n");
     *m_struct.stop = 0; // set stop flag in m_struct to 0, i.e. continue calculation
-    return 1;
+    //return 1;
   }
 
   // Make sure that the alive flag in m_struct is set to false
   // before exiting.
+#if 0
   if (input == 'q' || input == 'Q'){
     *m_struct.alive = 0;
     return 0;
   }
-  return -1;
+#endif
 }
 
 
@@ -81,7 +82,26 @@ void read_from_file(){
   fscanf(fd, "%s",buf);
   int i;
   for(i=0;i<strlen(buf);i++){
-    worker(buf[i]);
+    int input=buf[i];
+    if (input == 'z' || input == 'Z'){
+      printw("Calculate curent multiplication, save, and quit\n");
+      *m_struct.tofile = 1; // Set tofile flag in m_struct to 1
+    }
+    else if(input == 'q' || input == 'Q'){
+      *m_struct.alive = 0;
+    }
+    else{
+      if (input == 's' || input == 'S'){
+        printw("\nCalculation stopped.\n");
+        *m_struct.stop = 1; // set stop flag in m_struct to 1
+      }
+      
+      // If input is 't' or 'T', the program will continue multiplying matrices
+      if (input == 't' || input == 'T'){
+        printw("\n");
+        *m_struct.stop = 0; // set stop flag in m_struct to 0, i.e. continue calculation
+      }
+    }
   }
   fclose(fd);
 }
@@ -121,18 +141,38 @@ int main(){
   
   // Initially input is just 0
   int input = 0;
+  uint8_t running=1;
   
   // Do worker while input is not 'q' or 'Q'
-  while(input=getch()){
-    //if return value of worker is 0, we know that the process is done.
-    //therefore break out of the loop.
-    if(worker(input)){
-      continue;
+  while(running){
+    input=getch();
+    // If input is 'z' or 'Z', complete current matrix-multiply,
+    // save its results to FILE and terminate.
+    if (input == 'z' || input == 'Z'){
+      printw("Calculate curent multiplication, save, and quit\n");
+      *m_struct.tofile = 1; // Set tofile flag in m_struct to 1
+      running=0;
     }
-    else break;
-    //otherwise continue
+    else if(input == 'q' || input == 'Q'){
+      *m_struct.alive = 0;
+      running=0;
+    }
+    else{
+      if (input == 's' || input == 'S'){
+        printw("\nCalculation stopped.\n");
+        *m_struct.stop = 1; // set stop flag in m_struct to 1
+      }
+      
+      // If input is 't' or 'T', the program will continue multiplying matrices
+      if (input == 't' || input == 'T'){
+        printw("\n");
+        *m_struct.stop = 0; // set stop flag in m_struct to 0, i.e. continue calculation
+      }
+    }
   }
   
+  printw("broken\n");
+
   // Join threads
   pthread_join(thread, NULL);
   

@@ -17,7 +17,7 @@ clean:
 	rm -f *.o main
 
 distclean:
-	rm -f main *.o 
+	rm -f main *.o result.txt
 
 #inference for all .c files not listed above...
 %.o : %.c

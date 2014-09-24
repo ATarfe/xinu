@@ -8,6 +8,7 @@
  * contains methods to initialize and multiply matrices
  */
 #include <stdlib.h>
+#include <curses.h>
 #include <string.h>
 #include <math.h>
 #include <stdio.h>
@@ -26,7 +27,7 @@ int rand_int(int tid){
   gettimeofday(&tv,NULL);
   unsigned int seed=tv.tv_usec+tid*time(NULL);
   //generate numbers in the rage -1000~1000
-  return (rand_r(&seed) % 2000 -1000);
+  return (rand_r(&seed) % 50 -25);
 }
 
 /**
@@ -80,7 +81,9 @@ void * matrix_mult(matrix_mult_struct * input){
       for(j=0;j<DIM;j++){
         int sum=0;
         for(k=0;k<DIM;k++){
-          while(*stop);
+          while(*stop && (*(input->tofile)==0)){
+            usleep(500);
+          }
           sum+=(matrix1[i*DIM+k]*matrix2[j*DIM+k]);
           /*
            * if another thread has set print_current_indices to non-zero,
@@ -99,6 +102,7 @@ void * matrix_mult(matrix_mult_struct * input){
       }
     }
     if(*(input->tofile)){
+      printw("outputing file\n");
       //call write to file and exit:
       write_to_file("output.txt",output,DIM*DIM);
       *(input->alive)=0;
