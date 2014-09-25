@@ -52,6 +52,7 @@ void *read_from_file(matrix_mult_struct * mstruct){
             //*m_struct.print_current_indices = 1; // set stop flag in m_struct to 1
             *mstruct->stop = 1; // set stop flag in m_struct to 1
             printw("\n%d, %d, %d\n", idx1,idx2,idx3);
+            refresh();
           }
           
           // If input is 't' or 'T', the program will continue multiplying matrices
