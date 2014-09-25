@@ -9,7 +9,7 @@
  */
 
 #include <stdint.h>
-#define DIM 32 
+#define DIM 1024 
 
 typedef struct{
   int * output;

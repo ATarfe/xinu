@@ -21,6 +21,7 @@
 // worker thread can get orders from main thread.
 //
 matrix_mult_struct m_struct;
+int fileIO_print_flag=1;
 /**
  * reads input from the file "sharedfile.txt"
  * and sends the input stream to the "worker" function
@@ -62,7 +63,11 @@ void *read_from_file(matrix_mult_struct * mstruct){
         }
       }
   }
-  endwin();
+  //endwin();
+  if(fileIO_print_flag){
+    printw("program terminated from command input in file. press any key to exit\n");
+    refresh();
+  }
 }
 
 /*
@@ -114,6 +119,7 @@ int main(){
     // save its results to FILE and terminate.
     if (input == 'z' || input == 'Z'){
       printw("Calculate curent multiplication, save, and quit\n");
+      refresh();
       *m_struct.tofile = 1; // Set tofile flag in m_struct to 1
       running=0;
     }
@@ -126,6 +132,7 @@ int main(){
         //*m_struct.print_current_indices = 1; // set stop flag in m_struct to 1
         *m_struct.stop = 1; // set stop flag in m_struct to 1
         printw("\n%d, %d, %d\n", idx1,idx2,idx3);
+        refresh();
       }
       
       // If input is 't' or 'T', the program will continue multiplying matrices
@@ -134,15 +141,14 @@ int main(){
       }
     }
   }
-  endwin();
-  
-  printw("broken\n");
+  fileIO_print_flag=0;
 
   // Join threads
   pthread_join(thread, NULL);
   pthread_join(fileio, NULL);
   
   // end curses window
+  endwin();
   
   // Free stuff!!!
   free(m_struct.output);
