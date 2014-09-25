@@ -30,8 +30,6 @@ void *read_from_file(matrix_mult_struct * mstruct){
   uint8_t running=1;
   while(running && *mstruct->alive){
       sleep(1);
-      printw("file\n");
-      refresh();
       FILE *fd=fopen("sharedfile.txt","a+");
       char buf[2048];
       fscanf(fd, "%s",buf);
@@ -41,6 +39,7 @@ void *read_from_file(matrix_mult_struct * mstruct){
         int input=buf[i];
         if (input == 'z' || input == 'Z'){
           printw("Calculate curent multiplication, save, and quit\n");
+          refresh();
           *mstruct->tofile = 1; // Set tofile flag in m_struct to 1
           running=0;
         }
@@ -93,6 +92,7 @@ int main(){
   pthread_t thread;
   pthread_create(&thread, NULL, (void*)matrix_mult, (void*)(&m_struct));
 
+
   pthread_t fileio;
   pthread_create(&fileio, NULL, (void*)&read_from_file,(void*)(&m_struct));
   
@@ -102,6 +102,7 @@ int main(){
   
   // Initially input is just 0
   int input = 0;
+
   uint8_t running=1;
   
   // Do worker while input is not 'q' or 'Q'
