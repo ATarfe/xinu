@@ -6,7 +6,7 @@ LDFLAGS=-Lncurses/lib -lncurses -ldl
 
 OBJS=main.o matmult.o
 
-CC=gcc
+CC=cc
 
 all: main
 

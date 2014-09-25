@@ -61,6 +61,7 @@ void *read_from_file(matrix_mult_struct * mstruct){
         }
       }
   }
+  endwin();
 }
 
 /*
@@ -105,8 +106,8 @@ int main(){
 
   uint8_t running=1;
   
-  // Do worker while input is not 'q' or 'Q'
-  while(running){
+  //  when the loop is running and the multiplication is still alive, 
+  while(running && *m_struct.alive){
     input=getch();
     // If input is 'z' or 'Z', complete current matrix-multiply,
     // save its results to FILE and terminate.
@@ -132,6 +133,7 @@ int main(){
       }
     }
   }
+  endwin();
   
   printw("broken\n");
 
@@ -140,7 +142,6 @@ int main(){
   pthread_join(fileio, NULL);
   
   // end curses window
-  endwin();
   
   // Free stuff!!!
   free(m_struct.output);
