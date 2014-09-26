@@ -31,6 +31,9 @@ our program, instead of using pthread_create().
 APPENDIX
 - A struct storing flags necessary for matrix multiplication is shared between threads.
 
+- When reading input from 'sharedfile.txt', if there already exists a command in the file,
+  when the program first started, that command will be executed first.
+
 - Your computer should have a compiler that supports OpenMP, for the parallel generation
 of random matrices.
 
