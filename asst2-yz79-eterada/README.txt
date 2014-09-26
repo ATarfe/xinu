@@ -37,9 +37,15 @@ of random matrices.
 - Your computer should be running a *NIX environment and have some kind of
 curses library installed for our program to run correctly.
 
+- We use the inotify API to monitor the commands from 'sharedfile.txt'.
+- As a reference for using inotify, we have consulted the code that appears in
+  http://www.ibm.com/developerworks/linux/library/l-ubuntu-inotify/index.html
+
+-- delete later --
 - If you have a sequence of commands stored in 'sharedfile.txt', all of them
 will be executed sequentially from the beginning, over and over again unless
 you change the contents of the file.
+------------------
 
 - You are free to change the size of the matrices by modifying the DIM macro
 in 'matmult.h'.
