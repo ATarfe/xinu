@@ -29,36 +29,61 @@ int fileIO_print_flag=1;
 void *read_from_file(matrix_mult_struct * mstruct){
   //open sharedfile.txt
   uint8_t running=1;
+  uint8_t inited=0;
+  uint8_t restart_while_loop=0;
+  char buf[2048];
+  char old_buf[2048];
   while(running && *mstruct->alive){
-      sleep(1);
+      usleep(400);
       FILE *fd=fopen("sharedfile.txt","a+");
-      char buf[2048];
       fscanf(fd, "%s",buf);
-      int i;
-      fclose(fd);
-      for(i=0;i<strlen(buf);i++){
-        int input=buf[i];
-        if (input == 'z' || input == 'Z'){
-          printw("Calculate curent multiplication, save, and quit\n");
-          refresh();
-          *mstruct->tofile = 1; // Set tofile flag in m_struct to 1
-          running=0;
-        }
-        else if(input == 'q' || input == 'Q'){
-          *mstruct->alive = 0;
-          running=0;
+      //if first time running:
+      if(inited==0){
+        inited=1;
+        //copy buf to old buf
+        strcpy(old_buf,buf);
+      }
+      else{
+        //if not first time running:
+        //compare new string with old string
+        //if strings are the same:
+        //restart the while loop.
+        if(!strcmp(old_buf,buf)){
+          restart_while_loop=1;  
         }
         else{
-          if (input == 's' || input == 'S'){
-            //*m_struct.print_current_indices = 1; // set stop flag in m_struct to 1
-            *mstruct->stop = 1; // set stop flag in m_struct to 1
-            printw("\n%d, %d, %d\n", idx1,idx2,idx3);
+          restart_while_loop=0;
+          //copy new string into old string
+          strcpy(old_buf,buf);
+        }
+      }
+      fclose(fd);
+      if(!restart_while_loop){
+        int i;
+        for(i=0;i<strlen(buf);i++){
+          int input=buf[i];
+          if (input == 'z' || input == 'Z'){
+            printw("Calculate curent multiplication, save, and quit\n");
             refresh();
+            *mstruct->tofile = 1; // Set tofile flag in m_struct to 1
+            running=0;
           }
-          
-          // If input is 't' or 'T', the program will continue multiplying matrices
-          if (input == 't' || input == 'T'){
-            *mstruct->stop = 0; // set stop flag in m_struct to 0, i.e. continue calculation
+          else if(input == 'q' || input == 'Q'){
+            *mstruct->alive = 0;
+            running=0;
+          }
+          else{
+            if (input == 's' || input == 'S'){
+              //*m_struct.print_current_indices = 1; // set stop flag in m_struct to 1
+              *mstruct->stop = 1; // set stop flag in m_struct to 1
+              printw("\n%d, %d, %d\n", idx1,idx2,idx3);
+              refresh();
+            }
+            
+            // If input is 't' or 'T', the program will continue multiplying matrices
+            if (input == 't' || input == 'T'){
+              *mstruct->stop = 0; // set stop flag in m_struct to 0, i.e. continue calculation
+            }
           }
         }
       }
