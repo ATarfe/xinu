@@ -8,13 +8,14 @@ void producer(int count){
   //print produced value e.g. produced : 8
 
   int produced_value;
-  srand(10);
   
   while(1){
     //wait(sem_producer);
 
 	//produce value less than or equal to count
-    produced_value = rand()%(count+1)+1;
+	produced_value = 0;
+	while (count > produced_value)
+	    produced_value++;
     
     /* ----- ENTER CRITICAL SECTION ----- */
     wait(mutex);    
