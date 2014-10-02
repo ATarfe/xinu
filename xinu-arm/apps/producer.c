@@ -7,16 +7,16 @@ void producer(int count){
   int produced_value;
   
   while(1){
-    wait(sem_producer);
+    //wait(producer);
 
-    wait(mutex);
+    //wait(mutex);
     //CR: access "n"
-    signal(mutex);
+    //signal(mutex);
 
     //produce
     printf("produced: %d\n",produced_value);
     //
-    signal(sem_consumer);
+    //signal(consumer);
 
     //sleep?
   }

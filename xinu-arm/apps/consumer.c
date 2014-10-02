@@ -7,11 +7,13 @@ void consumer(int count){
   int consumed_value;
   
   while(1){
-    signal(sem_producer);
+    /*
+    signal(producer);
     signal(mutex);
 
-    wait(sem_consumer);
+    wait(consumer);
     wait(mutex);
+    */
     
     //consume    
     printf("consumed: %d\n",consumed_value);
