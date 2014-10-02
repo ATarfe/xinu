@@ -17,12 +17,12 @@ void producer(int count){
     produced_value = rand()%(count+1)+1;
     
     /* ----- ENTER CRITICAL SECTION ----- */
-    wait(mutex);
+    wait(mutex);    
 
     //Store value back to n
     n = produced_value;    
         
-    
+
     //Print result
     printf("Produced: %d\n", produced_value);
 
