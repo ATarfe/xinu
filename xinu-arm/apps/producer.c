@@ -13,7 +13,18 @@ void producer(int count){
     //CR: access "n"
     //signal(mutex);
 
-    //produce
+    //PRODUCE:
+    
+    //Get value from n
+    produced_value = n;
+    
+    //Increment it
+    produced_value++;
+    
+    //Store value back to n
+    n = produced_value;
+    
+    //Print result
     printf("produced: %d\n",produced_value);
     //
     //signal(consumer);
