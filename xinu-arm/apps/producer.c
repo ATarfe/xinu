@@ -11,9 +11,8 @@ void producer(int count){
   srand(10);
   
   while(1){
-    //wait(sem_producer);
 
-	//produce value less than or equal to count
+    //produce value less than or equal to count
     produced_value = rand()%(count+1)+1;
     
     /* ----- ENTER CRITICAL SECTION ----- */
@@ -29,7 +28,6 @@ void producer(int count){
     signal(mutex);
     /* ----- EXIT CRITICAL SECTION ----- */
 
-    //signal(consumer);
 
     //sleep?
     sleep(500); //sleep. otherwise screen scrolls too fast...
