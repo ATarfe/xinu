@@ -19,12 +19,8 @@ shellcmd xsh_prodcons(int argc, char *argv[])
   int count = 2000;  //local varible to hold count
   
   //Print nice things if number of arguments provided is wrong
-  if (argc > 2 || argc < 2){
-    if(argc > 2)
-      fprintf(stderr,"Too many arguments!\n");
-    else
-      fprintf(stderr,"Too few arguments!\n");
-      
+  if (argc > 2){
+    fprintf(stderr,"Too many arguments!\n");
     fprintf(stderr,"Usage:\nprodcons <count: int>\n");
     return SYSERR;
   }
