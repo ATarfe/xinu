@@ -7,12 +7,16 @@ void producer(int count){
   //produced value should get assigned to global variable 'n'.
   //print produced value e.g. produced : 8
 
-  int produced_value = 0;
-  
-  while(1){
-	//produce value less than or equal to count
-	while (count > produced_value)
-	    produced_value++;
+  int produced_value;
+  int upperbound=count;
+  while(count>0){
+    //produce value less than or equal to count
+    srand(count);
+    produced_value = rand() % upperbound;
+    /*
+    while (count > produced_value)
+        produced_value++;
+    */
     
     /* ----- ENTER CRITICAL SECTION ----- */
     wait(mutex);    
@@ -27,7 +31,7 @@ void producer(int count){
     signal(mutex);
     /* ----- EXIT CRITICAL SECTION ----- */
 
-
+    count--;
     //sleep?
     sleep(500); //sleep. otherwise screen scrolls too fast...
   }
