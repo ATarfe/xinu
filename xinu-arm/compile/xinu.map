@@ -1288,7 +1288,7 @@ Linker script and memory map
                 0x00010000                . = 0x10000
                 0x00010000                . = ALIGN (0x4)
 
-.text           0x00010000     0xba16
+.text           0x00010000     0xba22
  *(.text .text.*)
  .text          0x00010000      0x1f8 ../loader/platforms/raspberry-pi/start.o
                 0x00010000                _start
@@ -1604,154 +1604,154 @@ Linker script and memory map
                 0x00019184       0x98 ../shell/xsh_hello.o
                 0x00019184                xsh_hello
  .text.xsh_prodcons
-                0x0001921c      0x1b0 ../shell/xsh_prodcons.o
+                0x0001921c      0x1bc ../shell/xsh_prodcons.o
                 0x0001921c                xsh_prodcons
- .text.main     0x000193cc       0x80 ../system/main.o
-                0x000193cc                main
- .text.atoi     0x0001944c       0x88 ../lib/libxc.a(atoi.o)
-                0x0001944c                atoi
- .text.atol     0x000194d4       0x88 ../lib/libxc.a(atol.o)
-                0x000194d4                atol
- .text.bzero    0x0001955c       0x20 ../lib/libxc.a(bzero.o)
-                0x0001955c                bzero
- .text._prtl10  0x0001957c       0x98 ../lib/libxc.a(doprnt.o)
- .text._doprnt  0x00019614      0x5d4 ../lib/libxc.a(doprnt.o)
-                0x00019614                _doprnt
- .text.fprintf  0x00019be8       0x34 ../lib/libxc.a(fprintf.o)
-                0x00019be8                fprintf
- .text.printf   0x00019c1c       0x50 ../lib/libxc.a(printf.o)
-                0x00019c1c                printf
- .text.srand    0x00019c6c       0x10 ../lib/libxc.a(rand.o)
-                0x00019c6c                srand
- .text.rand     0x00019c7c       0x30 ../lib/libxc.a(rand.o)
-                0x00019c7c                rand
- .text.strncmp  0x00019cac       0x48 ../lib/libxc.a(strncmp.o)
-                0x00019cac                strncmp
- .text.strncpy  0x00019cf4       0x58 ../lib/libxc.a(strncpy.o)
-                0x00019cf4                strncpy
- .text          0x00019d4c      0x114 /nfs/nfs5/home/research/hardware/arm2/arm-2012.09/bin/../lib/gcc/arm-none-eabi/4.7.2/libgcc.a(_udivsi3.o)
-                0x00019d4c                __udivsi3
-                0x00019d4c                __aeabi_uidiv
-                0x00019e40                __aeabi_uidivmod
- .text          0x00019e60      0x148 /nfs/nfs5/home/research/hardware/arm2/arm-2012.09/bin/../lib/gcc/arm-none-eabi/4.7.2/libgcc.a(_divsi3.o)
-                0x00019e60                __aeabi_idiv
-                0x00019e60                __divsi3
-                0x00019f88                __aeabi_idivmod
- .text          0x00019fa8        0x4 /nfs/nfs5/home/research/hardware/arm2/arm-2012.09/bin/../lib/gcc/arm-none-eabi/4.7.2/libgcc.a(_dvmd_tls.o)
-                0x00019fa8                __aeabi_ldiv0
-                0x00019fa8                __aeabi_idiv0
+ .text.main     0x000193d8       0x80 ../system/main.o
+                0x000193d8                main
+ .text.atoi     0x00019458       0x88 ../lib/libxc.a(atoi.o)
+                0x00019458                atoi
+ .text.atol     0x000194e0       0x88 ../lib/libxc.a(atol.o)
+                0x000194e0                atol
+ .text.bzero    0x00019568       0x20 ../lib/libxc.a(bzero.o)
+                0x00019568                bzero
+ .text._prtl10  0x00019588       0x98 ../lib/libxc.a(doprnt.o)
+ .text._doprnt  0x00019620      0x5d4 ../lib/libxc.a(doprnt.o)
+                0x00019620                _doprnt
+ .text.fprintf  0x00019bf4       0x34 ../lib/libxc.a(fprintf.o)
+                0x00019bf4                fprintf
+ .text.printf   0x00019c28       0x50 ../lib/libxc.a(printf.o)
+                0x00019c28                printf
+ .text.srand    0x00019c78       0x10 ../lib/libxc.a(rand.o)
+                0x00019c78                srand
+ .text.rand     0x00019c88       0x30 ../lib/libxc.a(rand.o)
+                0x00019c88                rand
+ .text.strncmp  0x00019cb8       0x48 ../lib/libxc.a(strncmp.o)
+                0x00019cb8                strncmp
+ .text.strncpy  0x00019d00       0x58 ../lib/libxc.a(strncpy.o)
+                0x00019d00                strncpy
+ .text          0x00019d58      0x114 /nfs/nfs5/home/research/hardware/arm2/arm-2012.09/bin/../lib/gcc/arm-none-eabi/4.7.2/libgcc.a(_udivsi3.o)
+                0x00019d58                __udivsi3
+                0x00019d58                __aeabi_uidiv
+                0x00019e4c                __aeabi_uidivmod
+ .text          0x00019e6c      0x148 /nfs/nfs5/home/research/hardware/arm2/arm-2012.09/bin/../lib/gcc/arm-none-eabi/4.7.2/libgcc.a(_divsi3.o)
+                0x00019e6c                __aeabi_idiv
+                0x00019e6c                __divsi3
+                0x00019f94                __aeabi_idivmod
+ .text          0x00019fb4        0x4 /nfs/nfs5/home/research/hardware/arm2/arm-2012.09/bin/../lib/gcc/arm-none-eabi/4.7.2/libgcc.a(_dvmd_tls.o)
+                0x00019fb4                __aeabi_ldiv0
+                0x00019fb4                __aeabi_idiv0
  *(.rodata .rodata.*)
- .rodata        0x00019fac       0x35 ../loader/platforms/raspberry-pi/start.o
- *fill*         0x00019fe1        0x3 
- .rodata        0x00019fe4       0x10 ../system/platforms/raspberry-pi/handlers.o
- .rodata        0x00019ff4       0x28 ../system/platforms/raspberry-pi/platforminit.o
- .rodata        0x0001a01c      0x3fc ../system/initialize.o
- .rodata        0x0001a418       0xac ../system/queue.o
- .rodata        0x0001a4c4       0x34 ../system/queinit.o
- .rodata        0x0001a4f8       0x2c ../system/xdone.o
- .rodata        0x0001a524       0x28 ../system/clkinit.o
- .rodata        0x0001a54c       0x20 ../device/tty/ttyOpen.o
- .rodata        0x0001a56c       0xfc ../apps/date.o
- .rodata        0x0001a668       0x2c ../apps/hello.o
- .rodata        0x0001a694       0x10 ../apps/consumer.o
- .rodata        0x0001a6a4       0x10 ../apps/producer.o
- .rodata        0x0001a6b4      0x464 ../shell/shell.o
-                0x0001a84c                commandtab
-                0x0001a930                ncommand
- .rodata        0x0001ab18       0xbc ../shell/xsh_clear.o
- .rodata        0x0001abd4       0xc4 ../shell/xsh_date.o
- .rodata        0x0001ac98       0xc4 ../shell/xsh_exit.o
- .rodata        0x0001ad5c      0x218 ../shell/xsh_help.o
- .rodata        0x0001af74       0xc0 ../shell/xsh_reset.o
- .rodata        0x0001b034       0xfc ../shell/xsh_sleep.o
- .rodata        0x0001b130      0x148 ../shell/xsh_kill.o
- .rodata        0x0001b278      0x1fc ../shell/xsh_ps.o
- .rodata        0x0001b474      0x150 ../shell/xsh_gpiostat.o
- .rodata        0x0001b5c4      0x188 ../shell/xsh_led.o
- .rodata        0x0001b74c       0x44 ../shell/xsh_hello.o
- .rodata        0x0001b790       0x80 ../shell/xsh_prodcons.o
- .rodata        0x0001b810      0x154 ../system/conf.o
-                0x0001b838                devtab
- .rodata        0x0001b964        0x8 ../system/main.o
- .rodata        0x0001b96c       0x81 ../lib/libxc.a(ctype_.o)
-                0x0001b96c                _ctype_
+ .rodata        0x00019fb8       0x35 ../loader/platforms/raspberry-pi/start.o
+ *fill*         0x00019fed        0x3 
+ .rodata        0x00019ff0       0x10 ../system/platforms/raspberry-pi/handlers.o
+ .rodata        0x0001a000       0x28 ../system/platforms/raspberry-pi/platforminit.o
+ .rodata        0x0001a028      0x3fc ../system/initialize.o
+ .rodata        0x0001a424       0xac ../system/queue.o
+ .rodata        0x0001a4d0       0x34 ../system/queinit.o
+ .rodata        0x0001a504       0x2c ../system/xdone.o
+ .rodata        0x0001a530       0x28 ../system/clkinit.o
+ .rodata        0x0001a558       0x20 ../device/tty/ttyOpen.o
+ .rodata        0x0001a578       0xfc ../apps/date.o
+ .rodata        0x0001a674       0x2c ../apps/hello.o
+ .rodata        0x0001a6a0       0x10 ../apps/consumer.o
+ .rodata        0x0001a6b0       0x10 ../apps/producer.o
+ .rodata        0x0001a6c0      0x464 ../shell/shell.o
+                0x0001a858                commandtab
+                0x0001a93c                ncommand
+ .rodata        0x0001ab24       0xbc ../shell/xsh_clear.o
+ .rodata        0x0001abe0       0xc4 ../shell/xsh_date.o
+ .rodata        0x0001aca4       0xc4 ../shell/xsh_exit.o
+ .rodata        0x0001ad68      0x218 ../shell/xsh_help.o
+ .rodata        0x0001af80       0xc0 ../shell/xsh_reset.o
+ .rodata        0x0001b040       0xfc ../shell/xsh_sleep.o
+ .rodata        0x0001b13c      0x148 ../shell/xsh_kill.o
+ .rodata        0x0001b284      0x1fc ../shell/xsh_ps.o
+ .rodata        0x0001b480      0x150 ../shell/xsh_gpiostat.o
+ .rodata        0x0001b5d0      0x188 ../shell/xsh_led.o
+ .rodata        0x0001b758       0x44 ../shell/xsh_hello.o
+ .rodata        0x0001b79c       0x80 ../shell/xsh_prodcons.o
+ .rodata        0x0001b81c      0x154 ../system/conf.o
+                0x0001b844                devtab
+ .rodata        0x0001b970        0x8 ../system/main.o
+ .rodata        0x0001b978       0x81 ../lib/libxc.a(ctype_.o)
+                0x0001b978                _ctype_
  .rodata.str1.1
-                0x0001b9ed       0x29 ../lib/libxc.a(doprnt.o)
+                0x0001b9f9       0x29 ../lib/libxc.a(doprnt.o)
  *(.glue_7 .glue_7t)
  .glue_7        0x00000000        0x0 linker stubs
  .glue_7t       0x00000000        0x0 linker stubs
-                0x0001ba16                _etext = .
+                0x0001ba22                _etext = .
 
-.vfp11_veneer   0x0001ba18        0x0
+.vfp11_veneer   0x0001ba24        0x0
  .vfp11_veneer  0x00000000        0x0 linker stubs
 
-.v4_bx          0x0001ba18        0x0
+.v4_bx          0x0001ba24        0x0
  .v4_bx         0x00000000        0x0 linker stubs
 
-.iplt           0x0001ba18        0x0
+.iplt           0x0001ba24        0x0
  .iplt          0x00000000        0x0 ../loader/platforms/raspberry-pi/start.o
 
-.rel.dyn        0x0001ba18        0x0
+.rel.dyn        0x0001ba24        0x0
  .rel.iplt      0x00000000        0x0 ../loader/platforms/raspberry-pi/start.o
 
-.data           0x0001ba18       0xc0
-                0x0001ba18                _data = .
+.data           0x0001ba24       0xc0
+                0x0001ba24                _data = .
  *(.data .data.*)
- .data          0x0001ba18        0x4 ../system/queinit.o
- .data          0x0001ba1c       0xb8 ../apps/date.o
-                0x0001ba1c                days_in_month
-                0x0001ba28                month_names
-                0x0001ba58                weekday_names
-                0x0001ba74                tz_names
- .data          0x0001bad4        0x4 ../lib/libxc.a(rand.o)
-                0x0001bad8                _edata = .
+ .data          0x0001ba24        0x4 ../system/queinit.o
+ .data          0x0001ba28       0xb8 ../apps/date.o
+                0x0001ba28                days_in_month
+                0x0001ba34                month_names
+                0x0001ba64                weekday_names
+                0x0001ba80                tz_names
+ .data          0x0001bae0        0x4 ../lib/libxc.a(rand.o)
+                0x0001bae4                _edata = .
 
-.igot.plt       0x0001bad8        0x0
+.igot.plt       0x0001bae4        0x0
  .igot.plt      0x00000000        0x0 ../loader/platforms/raspberry-pi/start.o
 
-.bss            0x0001bad8     0x4f2c
-                0x0001bad8                _bss = .
+.bss            0x0001bae4     0x4f2c
+                0x0001bae4                _bss = .
  *(.bss .bss.*)
- .bss           0x0001bad8        0x1 ../system/platforms/raspberry-pi/clkupdate.o
- *fill*         0x0001bad9        0x3 
- .bss           0x0001badc        0x4 ../system/platforms/raspberry-pi/create.o
- .bss           0x0001bae0      0x100 ../system/platforms/raspberry-pi/vic.o
- .bss           0x0001bbe0     0x29ac ../system/initialize.o
-                0x0001bbe0                thrtab
-                0x0001dfd0                semtab
-                0x0001e480                readylist
-                0x0001e484                memlist
-                0x0001e48c                bfptab
-                0x0001e54c                thrcount
-                0x0001e550                thrcurrent
-                0x0001e554                memheap
-                0x0001e558                cpuid
-                0x0001e55c                platform
- .bss           0x0001e58c      0xe40 ../system/queue.o
-                0x0001e58c                quetab
- .bss           0x0001f3cc        0x4 ../system/resched.o
-                0x0001f3cc                resdefer
- .bss           0x0001f3d0        0xc ../system/clkinit.o
-                0x0001f3d0                clkticks
-                0x0001f3d4                clktime
-                0x0001f3d8                sleepq
- .bss           0x0001f3dc        0x4 ../system/semcreate.o
- .bss           0x0001f3e0      0x410 ../device/loopback/loopbackInit.o
-                0x0001f3e0                looptab
- .bss           0x0001f7f0      0x83c ../device/uart-pl011/uartInit.o
-                0x0001f7f0                uarttab
- .bss           0x0002002c      0x828 ../device/tty/ttyInit.o
-                0x0002002c                ttytab
- .bss           0x00020854        0x4 ../apps/date.o
- .bss           0x00020858      0x1a8 ../mailbox/mailboxInit.o
-                0x00020858                mboxtab
-                0x000209fc                mboxtabsem
- .bss           0x00020a00        0x4 ../shell/xsh_prodcons.o
-                0x00020a00                n
+ .bss           0x0001bae4        0x1 ../system/platforms/raspberry-pi/clkupdate.o
+ *fill*         0x0001bae5        0x3 
+ .bss           0x0001bae8        0x4 ../system/platforms/raspberry-pi/create.o
+ .bss           0x0001baec      0x100 ../system/platforms/raspberry-pi/vic.o
+ .bss           0x0001bbec     0x29ac ../system/initialize.o
+                0x0001bbec                thrtab
+                0x0001dfdc                semtab
+                0x0001e48c                readylist
+                0x0001e490                memlist
+                0x0001e498                bfptab
+                0x0001e558                thrcount
+                0x0001e55c                thrcurrent
+                0x0001e560                memheap
+                0x0001e564                cpuid
+                0x0001e568                platform
+ .bss           0x0001e598      0xe40 ../system/queue.o
+                0x0001e598                quetab
+ .bss           0x0001f3d8        0x4 ../system/resched.o
+                0x0001f3d8                resdefer
+ .bss           0x0001f3dc        0xc ../system/clkinit.o
+                0x0001f3dc                clkticks
+                0x0001f3e0                clktime
+                0x0001f3e4                sleepq
+ .bss           0x0001f3e8        0x4 ../system/semcreate.o
+ .bss           0x0001f3ec      0x410 ../device/loopback/loopbackInit.o
+                0x0001f3ec                looptab
+ .bss           0x0001f7fc      0x83c ../device/uart-pl011/uartInit.o
+                0x0001f7fc                uarttab
+ .bss           0x00020038      0x828 ../device/tty/ttyInit.o
+                0x00020038                ttytab
+ .bss           0x00020860        0x4 ../apps/date.o
+ .bss           0x00020864      0x1a8 ../mailbox/mailboxInit.o
+                0x00020864                mboxtab
+                0x00020a08                mboxtabsem
+ .bss           0x00020a0c        0x4 ../shell/xsh_prodcons.o
+                0x00020a0c                n
  *(COMMON)
-                0x00020a04                . = ALIGN (0x4)
-                0x00020a04                _bss_end = .
-                0x00020a04                _end = .
+                0x00020a10                . = ALIGN (0x4)
+                0x00020a10                _bss_end = .
+                0x00020a10                _end = .
 LOAD ../loader/platforms/raspberry-pi/start.o
 LOAD ../system/platforms/raspberry-pi/ctxsw.o
 LOAD ../system/platforms/raspberry-pi/pause.o
@@ -2229,7 +2229,7 @@ OUTPUT(xinu.elf elf32-littlearm)
  .comment       0x00000000       0x31 ../lib/libxc.a(strncmp.o)
  .comment       0x00000000       0x31 ../lib/libxc.a(strncpy.o)
 
-.debug_line     0x00000000     0x4c9c
+.debug_line     0x00000000     0x4c9d
  .debug_line    0x00000000       0xd4 ../loader/platforms/raspberry-pi/start.o
  .debug_line    0x000000d4       0x61 ../system/platforms/raspberry-pi/ctxsw.o
  .debug_line    0x00000135       0x59 ../system/platforms/raspberry-pi/pause.o
@@ -2324,19 +2324,19 @@ OUTPUT(xinu.elf elf32-littlearm)
  .debug_line    0x00004475       0x5c ../shell/xsh_test.o
  .debug_line    0x000044d1       0x63 ../shell/xsh_testsuite.o
  .debug_line    0x00004534       0x6c ../shell/xsh_hello.o
- .debug_line    0x000045a0       0xd4 ../shell/xsh_prodcons.o
- .debug_line    0x00004674       0x52 ../system/conf.o
- .debug_line    0x000046c6       0x4b ../system/main.o
- .debug_line    0x00004711       0x59 ../lib/libxc.a(atoi.o)
- .debug_line    0x0000476a       0x5b ../lib/libxc.a(atol.o)
- .debug_line    0x000047c5       0x48 ../lib/libxc.a(bzero.o)
- .debug_line    0x0000480d       0x29 ../lib/libxc.a(ctype_.o)
- .debug_line    0x00004836      0x237 ../lib/libxc.a(doprnt.o)
- .debug_line    0x00004a6d       0x67 ../lib/libxc.a(fprintf.o)
- .debug_line    0x00004ad4       0xe1 ../lib/libxc.a(printf.o)
- .debug_line    0x00004bb5       0x48 ../lib/libxc.a(rand.o)
- .debug_line    0x00004bfd       0x4a ../lib/libxc.a(strncmp.o)
- .debug_line    0x00004c47       0x55 ../lib/libxc.a(strncpy.o)
+ .debug_line    0x000045a0       0xd5 ../shell/xsh_prodcons.o
+ .debug_line    0x00004675       0x52 ../system/conf.o
+ .debug_line    0x000046c7       0x4b ../system/main.o
+ .debug_line    0x00004712       0x59 ../lib/libxc.a(atoi.o)
+ .debug_line    0x0000476b       0x5b ../lib/libxc.a(atol.o)
+ .debug_line    0x000047c6       0x48 ../lib/libxc.a(bzero.o)
+ .debug_line    0x0000480e       0x29 ../lib/libxc.a(ctype_.o)
+ .debug_line    0x00004837      0x237 ../lib/libxc.a(doprnt.o)
+ .debug_line    0x00004a6e       0x67 ../lib/libxc.a(fprintf.o)
+ .debug_line    0x00004ad5       0xe1 ../lib/libxc.a(printf.o)
+ .debug_line    0x00004bb6       0x48 ../lib/libxc.a(rand.o)
+ .debug_line    0x00004bfe       0x4a ../lib/libxc.a(strncmp.o)
+ .debug_line    0x00004c48       0x55 ../lib/libxc.a(strncpy.o)
 
 .debug_info     0x00000000     0xf128
  .debug_info    0x00000000       0x85 ../loader/platforms/raspberry-pi/start.o
