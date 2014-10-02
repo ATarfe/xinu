@@ -16,7 +16,7 @@ void producer(int count){
     //produce
     printf("produced: %d\n",produced_value);
     //
-    signal(consumer)
+    signal(consumer);
 
     //sleep?
   }
