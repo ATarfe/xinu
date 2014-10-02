@@ -10,7 +10,15 @@ void consumer(int count){
     /*
     signal(producer);
     signal(mutex);
-
+	*/
+	
+	//Get value of n
+	consumed_value = n;
+	while (count > consumed_value){
+	  consumed_value--;	
+	}
+	
+	/*
     wait(consumer);
     wait(mutex);
     */
