@@ -25,10 +25,10 @@ shellcmd xsh_prodcons(int argc, char *argv[])
     return SYSERR;
   }
 
-  else{
-    count	= atoi(argv[1]);
+  else if argc == 1{
+    count = atoi(argv[1]);
     if (0 == count){
-      fprintf(stderr,"You either entered 0 or a non-numerical value.");
+      fprintf(stderr,"You either entered 0 or a non-numerical value.\n");
       return SYSERR;
     }
   }
