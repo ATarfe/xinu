@@ -7,11 +7,10 @@ void producer(int count){
   //produced value should get assigned to global variable 'n'.
   //print produced value e.g. produced : 8
 
-  int produced_value;
+  int produced_value = 0;
   
   while(1){
 	//produce value less than or equal to count
-	produced_value = 0;
 	while (count > produced_value)
 	    produced_value++;
     

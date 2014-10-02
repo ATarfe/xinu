@@ -9,7 +9,6 @@ void consumer(int count){
   int consumed_value;
   
   while(1){
-	
     /* ----- ENTER CRITICAL SECTION ----- */
     wait(mutex);	
     //Get value of n
@@ -23,7 +22,7 @@ void consumer(int count){
       count--;
     }
 
-      printf("Consumed: %d\n",consumed_value);
+    printf("Consumed: %d\n",consumed_value);
       
     signal(mutex);
     /* ----- EXIT CRITICAL SECTION ----- */
