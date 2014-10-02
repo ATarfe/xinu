@@ -7,8 +7,7 @@ void consumer(int count){
   //print consumed value e.g. consumed : 8
   
   int consumed_value;
-  
-  while(1){
+  while(count>0){
 	
     /* ----- ENTER CRITICAL SECTION ----- */
     wait(mutex);	
@@ -19,13 +18,16 @@ void consumer(int count){
     
     //TO-DO: ILL-DEFINED ASSIGNMENT. PROCEED WITH INTERPRETATION.
     //while (consumed_value > count){
+    /*
     while (count > consumed_value){
       count--;
     }
+    */
 
-      printf("Consumed: %d\n",consumed_value);
+    printf("Consumed: %d\n",consumed_value);
       
     signal(mutex);
+    count--;
     /* ----- EXIT CRITICAL SECTION ----- */
   }
 }
