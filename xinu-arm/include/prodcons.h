@@ -3,12 +3,12 @@
 #include  <semaphore.h> //include/semaphore.h
 /*Global	vaible	for	producer	consumer*/		
 extern int n;
+
 //semaphores:
-/*
-semaphore producer;
-semaphore consumer;
-semaphore mutex;
- */
+extern semaphore sem_producer;
+extern semaphore sem_consumer;
+extern semaphore mutex;
+ 
 /*function	Prototype*/
 void consumer(int count);	
 void producer(int count);	

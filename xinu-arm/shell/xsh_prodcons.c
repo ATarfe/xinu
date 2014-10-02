@@ -8,10 +8,13 @@
  *
  * Sept 30, 2014
  */
-
-
 #include <prodcons.h>
-int n;  
+
+int n;
+semaphore sem_producer;
+semaphore sem_consumer;
+semaphore mutex;
+
 shellcmd xsh_prodcons(int argc, char *argv[]) 
 {       
   //Argument verifications and validations         
@@ -25,6 +28,7 @@ shellcmd xsh_prodcons(int argc, char *argv[])
     return SYSERR;
   }
 
+  //Otherwise if we do have an argument...
   else if (argc == 2){
     count = atoi(argv[1]);
     if (0 == count){
@@ -32,17 +36,18 @@ shellcmd xsh_prodcons(int argc, char *argv[])
       return SYSERR;
     }
   }
-  //create the process produer and consumer and put them in ready queue.
+  
+  //create the process producer and consumer and put them in ready queue.
   //Look at the definitions of function create and resume in exinu/system
   //folder for reference.
   
-  //create semaphores:
-  /*
-  sem_producer=semcreate(0);
-  sem_consumer=semcreate(0);
-  mutex=semcreate(0);
-  */
-
-  resume(	create(producer,	1024,	20,	"producer",	1,	count)	);							
-  resume(	create(consumer,	1024,	20,	"consumer",	1,	count)	);															
+  //initialize semaphores:
+  
+  sem_producer=semcreate(1);
+  sem_consumer=semcreate(1);
+  mutex=semcreate(1);
+  
+  resume( create(producer, 1024, 20, "producer", 1, count) );							
+  resume( create(consumer, 1024, 20, "consumer", 1, count) );
+  return OK;											
 }	

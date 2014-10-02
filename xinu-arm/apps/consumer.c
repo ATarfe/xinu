@@ -1,4 +1,6 @@
 #include <prodcons.h>
+#include <stdio.h>
+
 void consumer(int count){						
   //Code to consume values of global variable 'n' until the value
   //of n is less than or equal to count
@@ -12,19 +14,26 @@ void consumer(int count){
     signal(mutex);
 	*/
 	
+	/* ----- ENTER CRITICAL SECTION ----- */
+	wait(mutex);
 	//Get value of n
 	consumed_value = n;
+	
+	//TO-DO: ILL-DEFINED ASSIGNMENT. PROCEED WITH INTERPRETATION.
+	//while (consumed_value > count){
 	while (count > consumed_value){
-	  consumed_value--;	
+	  count--;
 	}
+    printf("Consumed: %d\n",consumed_value);
+    
+	signal(mutex);
+	/* ----- EXIT CRITICAL SECTION ----- */
 	
 	/*
     wait(consumer);
     wait(mutex);
     */
-    
-    //consume    
-    printf("consumed: %d\n",consumed_value);
+    sleep(450); // Intentionally out of sync with producer to demonstrate mutual exclusion
   }
 }
 
