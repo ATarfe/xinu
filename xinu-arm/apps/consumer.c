@@ -7,10 +7,10 @@ void consumer(int count){
   int consumed_value;
   
   while(1){
-    signal(producer);
+    signal(sem_producer);
     signal(mutex);
 
-    wait(consumer);
+    wait(sem_consumer);
     wait(mutex);
     
     //consume    

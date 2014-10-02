@@ -41,11 +41,11 @@ shellcmd xsh_prodcons(int argc, char *argv[])
   //folder for reference.
   
   //create semaphores:
-  /*
+  
   sem_producer=semcreate(0);
   sem_consumer=semcreate(0);
   mutex=semcreate(0);
-  */
+  
 
   resume(	create(producer,	1024,	20,	"producer",	1,	count)	);							
   resume(	create(consumer,	1024,	20,	"consumer",	1,	count)	);															
