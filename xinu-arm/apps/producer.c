@@ -10,8 +10,6 @@ void producer(int count){
   int produced_value;
   
   while(1){
-    //wait(sem_producer);
-
 	//produce value less than or equal to count
 	produced_value = 0;
 	while (count > produced_value)
@@ -30,7 +28,6 @@ void producer(int count){
     signal(mutex);
     /* ----- EXIT CRITICAL SECTION ----- */
 
-    //signal(consumer);
 
     //sleep?
     sleep(500); //sleep. otherwise screen scrolls too fast...

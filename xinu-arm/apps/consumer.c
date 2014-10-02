@@ -9,33 +9,24 @@ void consumer(int count){
   int consumed_value;
   
   while(1){
-    /*
-    signal(producer);
-    signal(mutex);
-	*/
 	
-	/* ----- ENTER CRITICAL SECTION ----- */
-	wait(mutex);	
-	//Get value of n
-	consumed_value = n;
-	
-	sleep(510); // To simulate race condition if no mutex is set.
-	
-	//TO-DO: ILL-DEFINED ASSIGNMENT. PROCEED WITH INTERPRETATION.
-	//while (consumed_value > count){
-	while (count > consumed_value){
-	  count--;
-	}
-
-    printf("Consumed: %d\n",consumed_value);
+    /* ----- ENTER CRITICAL SECTION ----- */
+    wait(mutex);	
+    //Get value of n
+    consumed_value = n;
     
-	signal(mutex);
-	/* ----- EXIT CRITICAL SECTION ----- */
-	
-	/*
-    wait(consumer);
-    wait(mutex);
-    */
+    sleep(510); // To simulate race condition if no mutex is set.
+    
+    //TO-DO: ILL-DEFINED ASSIGNMENT. PROCEED WITH INTERPRETATION.
+    //while (consumed_value > count){
+    while (count > consumed_value){
+      count--;
+    }
+
+      printf("Consumed: %d\n",consumed_value);
+      
+    signal(mutex);
+    /* ----- EXIT CRITICAL SECTION ----- */
   }
 }
 
