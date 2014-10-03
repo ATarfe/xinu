@@ -15,14 +15,6 @@ void consumer(int count){
     consumed_value = n;
     
     sleep(510); // To simulate race condition if no mutex is set.
-    
-    //TO-DO: ILL-DEFINED ASSIGNMENT. PROCEED WITH INTERPRETATION.
-    //while (consumed_value > count){
-    /*
-    while (count > consumed_value){
-      count--;
-    }
-    */
 
     printf("Consumed: %d\n",consumed_value);
       

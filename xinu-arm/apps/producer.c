@@ -13,17 +13,12 @@ void producer(int count){
     //produce value less than or equal to count
     srand(count);
     produced_value = rand() % upperbound;
-    /*
-    while (count > produced_value)
-        produced_value++;
-    */
-    
+
     /* ----- ENTER CRITICAL SECTION ----- */
     wait(mutex);    
 
     //Store value back to n
     n = produced_value;    
-        
 
     //Print result
     printf("Produced: %d\n", produced_value);
