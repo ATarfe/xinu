@@ -5,9 +5,8 @@
 extern int n;
 
 //semaphores:
-extern semaphore sem_producer;
-extern semaphore sem_consumer;
-extern semaphore mutex;
+extern semaphore produced;
+extern semaphore consumed;
  
 /*function	Prototype*/
 void consumer(int count);	

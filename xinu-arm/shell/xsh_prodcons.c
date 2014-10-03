@@ -11,9 +11,8 @@
 #include <prodcons.h>
 
 int n;
-semaphore sem_producer;
-semaphore sem_consumer;
-semaphore mutex;
+semaphore produced;
+semaphore consumed;
 
 shellcmd xsh_prodcons(int argc, char *argv[]) 
 {       
@@ -43,9 +42,8 @@ shellcmd xsh_prodcons(int argc, char *argv[])
   
   //initialize semaphores:
   
-  sem_producer=semcreate(1);
-  sem_consumer=semcreate(1);
-  mutex=semcreate(1);
+  consumed=semcreate(0);
+  produced=semcreate(1);
   
   resume( create(producer, 1024, 20, "producer", 1, count) );							
   resume( create(consumer, 1024, 20, "consumer", 1, count) );
