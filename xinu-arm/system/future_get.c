@@ -23,20 +23,18 @@
  * return: syscall: SYSERR or OK 
  */
 syscall future_get(future *f, int *value){
-    if(f->state==FUTURE_VALID){
-        f->state=FUTURE_EMPTY;
-        *value=*(f->value);
-        return OK;
-    }
-    else if(f->state==FUTURE_EMPTY){
+    if(f->state==FUTURE_EMPTY){
         //set tid:
         f->tid=gettid();
         //set state:
         f->state=FUTURE_WAITING;
         //block thread:
         wait(f->block_wait);
+        if(f->state==FUTURE_VALID){
+            f->state=FUTURE_EMPTY;
+            *value=*(f->value);
+            return OK;
+        }
     }
-    else{
-        return SYSERR;
-    }
+    return SYSERR;
 }

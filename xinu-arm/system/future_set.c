@@ -23,7 +23,7 @@
  * syscall: SYSERR or OK
  */
 syscall future_set(future *f, int *value){
-    if(f->state==FUTURE_WAITING || f->state=FUTURE_EMPTY){
+    if(f->state==FUTURE_WAITING || f->state==FUTURE_EMPTY){
         *(f->value)=*value;
         f->state=FUTURE_VALID;
         signal(f->block_wait);
