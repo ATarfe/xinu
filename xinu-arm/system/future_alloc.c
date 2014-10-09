@@ -12,6 +12,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <future.h>
+#include <memory.h>
 
 
 /**
@@ -25,6 +26,15 @@
  * future: NULL or a valid future reference
  */
 future* future_alloc(int future_flag){
-
+    //first allocate the struct future:
+    future *f=memget(sizeof(future));
+    if ((int*)f==-1){
+        //failed
+        return NULL; 
+    }
+    //second, set future flag:
+    f->flag=future_flag;
+    f->state=FUTURE_EMPTY;
+    return f;
 }
 

@@ -1,5 +1,7 @@
 #ifndef _FUTURE_H_
 #define _FUTURE_H_
+#include <semaphore.h>
+#include <thread.h>
 /* define states */
 #define FUTURE_EMPTY         0
 #define FUTURE_WAITING       1                                    
@@ -12,6 +14,7 @@ typedef struct futent
     int flag;
     int state;                                    
     tid_typ tid;
+    semaphore block_wait=0;
 }future;
 /* Interface for system call */
 future* future_alloc(int future_flags);

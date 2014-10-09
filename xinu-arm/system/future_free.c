@@ -13,6 +13,12 @@
 #include <future.h>
 
 
+/*
+ * calls memfree
+ *
+ * param: future
+ * return : syscall
+ */
 syscall future_free(future* f){
-
+    return memfree(f,sizeof(future))!=SYSERR? OK : SYSERR;
 }
