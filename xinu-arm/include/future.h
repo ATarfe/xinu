@@ -14,7 +14,7 @@ typedef struct futent
     int flag;
     int state;                                    
     tid_typ tid;
-    semaphore block_wait=0;
+    semaphore block_wait;
 }future;
 /* Interface for system call */
 future* future_alloc(int future_flags);

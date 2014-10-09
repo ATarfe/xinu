@@ -35,6 +35,7 @@ future* future_alloc(int future_flag){
     //second, set future flag:
     f->flag=future_flag;
     f->state=FUTURE_EMPTY;
+    f->block_wait=semcreate(0);
     return f;
 }
 

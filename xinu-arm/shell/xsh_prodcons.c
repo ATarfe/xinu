@@ -32,7 +32,7 @@ shellcmd xsh_prodcons(int argc, char *argv[])
 
   //Otherwise if we do have an argument...
   else if (argc == 3){
-    if(strcmp(argv[2],"-f")==0){
+    if(strncmp(argv[2],"-f",20)==0){
       use_future==1;
     }
     else{
@@ -48,7 +48,7 @@ shellcmd xsh_prodcons(int argc, char *argv[])
     }
   }
   else if (argc == 2){
-    if(strcmp(argv[1],"-f")==0){
+    if(strncmp(argv[1],"-f",20)==0){
       use_future==1;
     }
     if(!use_future){
