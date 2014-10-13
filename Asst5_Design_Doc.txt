@@ -1,0 +1,21 @@
+Design Document for
+Assignment 5
+P536 - Advanced Operating Systems
+October 13, 2014
+
+Authors:
+Peter Zhang (yz79)
+Eriya Terada (eterada)
+
+Since a future has a one-to-one relationship between the thread that set
+the future and the thread that will get future, we simply chose to use a
+binary semaphore (mutex) to force the getter thread to sleep until it is
+woken up by the setter thread, when the future is set. In the mean time,
+access from other threads to the future is protected by the state (which
+would be set to FUTURE_WAITING).
+
+For xsh_prodcons.c to accept the -f flag, we basically added a bunch of
+if statements that scanned and parsed the arguments.
+
+Other than that we followed the steps provided in the assignment.
+
