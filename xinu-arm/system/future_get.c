@@ -23,7 +23,8 @@
  * return: syscall: SYSERR or OK 
  */
 syscall future_get(future *f, int *value){
-    if(f->state==FUTURE_EMPTY){
+    //if tid id not set and state is empty
+    if(f->state==FUTURE_EMPTY && f->tid==NULL){
         //set tid:
         f->tid=gettid();
         //set state:
