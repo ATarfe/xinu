@@ -34,6 +34,8 @@ syscall future_get(future *f, int *value){
         if(f->state==FUTURE_VALID){
             f->state=FUTURE_EMPTY;
             *value=*(f->value);
+            //reset tid:
+            f->tid=NULL;
             return OK;
         }
     }
