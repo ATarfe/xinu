@@ -17,10 +17,10 @@ uint future_cons(future *fut) {
   int i, status;
   status = future_get(fut, &i);
   if (status < 1) {
-    printf("future_get failed\n");
+    printf("future_get failed\n\r");
       return -1;
   }
-  printf("consumer consumed: %d\n", i);
+  printf("consumer consumed: %d\n\r", i);
   return OK;
 }
 

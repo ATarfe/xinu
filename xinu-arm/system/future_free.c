@@ -20,6 +20,5 @@
  * return : syscall
  */
 syscall future_free(future* f){
-    semfree(f->block_wait);
     return memfree(f,sizeof(future))!=SYSERR? OK : SYSERR;
 }

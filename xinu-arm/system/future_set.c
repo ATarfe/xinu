@@ -23,14 +23,70 @@
  * syscall: SYSERR or OK
  */
 syscall future_set(future *f, int *value){
-    if(f->state==FUTURE_WAITING || f->state==FUTURE_EMPTY){
-        *(f->value)=*value;
-        f->state=FUTURE_VALID;
-        signal(f->block_wait);
-        return OK;
+    if(f->flag==FUTURE_EXCLUSIVE){
+        if(f->state==FUTURE_WAITING || f->state==FUTURE_EMPTY){
+            *(f->value)=*value;
+            f->state=FUTURE_VALID;
+            //disable interrupts
+            irqmask im=disable();
+            //put thread into ready queue
+            ready(f->tid,RESCHED_YES);
+            //restore interrupts.
+            restore(im);
+            return OK;
+        }
+        else{
+            return SYSERR;
+        }
     }
-    else{
+    else
+    if (f->flag==FUTURE_SHARED){
+        if(f->state==FUTURE_WAITING || f->state==FUTURE_EMPTY){
+            //disable interrupts-only thread running here.
+            irqmask im=disable();
+            f->state=FUTURE_VALID;
+            *(f->value)=*value;
+            //put thread into ready queue
+            if(f->get_queue!=NULL){
+                tid_typ listener=peek(f->get_queue);
+                ready(listener,RESCHED_YES);
+                queue *nextinqueue=f->get_queue->next;
+                free(f->get_queue);
+                f->get_queue=nextinqueue;
+            }
+            //restore interrupts.
+            restore(im);
+            return OK;
+        }
         return SYSERR;
     }
-
+    else
+    if (f->flag==FUTURE_QUEUE){
+        //check first if a consumer is waiting:
+        if(f->state==FUTURE_EMPTY || f->state==FUTURE_WAITING){
+            //put myself into queue:
+            add_to_queue(f->set_queue,gettid());
+            if(f->get_queue==NULL){
+                //I wait.
+                irqmask im=disable();
+                thrtab[gettid()].state=THRWAIT;
+                resched();
+                restore(im);
+            }
+            //woken up by consumer, or if consumers waiting, produce
+            *(f->value)=*value;
+            f->state=FUTURE_VALID;
+            //signal consumer to consume
+            irqmask im=disable();
+            tid_typ listener=peek(f->get_queue);
+            ready(listener,RESCHED_YES);
+            queue *nextinqueue=f->get_queue->next;
+            free(f->get_queue);
+            f->get_queue=nextinqueue;
+            ready(listener,RESCHED_YES);
+            restore(im);
+            return OK;
+        }
+        return SYSERR;
+    }
 }
