@@ -51,10 +51,18 @@ syscall future_get(future *f, int *value){
     else 
     if (f->flag==FUTURE_SHARED && (f->state==FUTURE_WAITING || f->state==FUTURE_EMPTY)){
         irqmask im=disable();
+
         if(f->state!=FUTURE_WAITING){
             f->state=FUTURE_WAITING;
         }
         add_to_queue(&(f->get_queue),gettid());
+        //debug
+        /*
+        printf("get:future is shared\n\r");
+        restore(im);
+        return OK;
+        */
+        //end debug
         //put current thread to wait
         thrtab[gettid()].state=THRWAIT;
         //reschedule
@@ -65,12 +73,12 @@ syscall future_get(future *f, int *value){
             *value=*(f->value);
             //wake up next consumer in queue, if valid:
             im=disable();
-            if(f->get_queue!=NULL){
+            if(f->get_queue.thread!=0){
                 tid_typ listener=peek(f->get_queue);
                 ready(listener,RESCHED_YES);
-                queue *nextinqueue=f->get_queue->next;
-                free(f->get_queue);
-                f->get_queue=nextinqueue;
+                queue *nextinqueue=f->get_queue.next;
+                free(&(f->get_queue));
+                f->get_queue=*nextinqueue;
             }
             restore(im);
             return OK;
@@ -84,13 +92,13 @@ syscall future_get(future *f, int *value){
         }
         add_to_queue(&(f->get_queue),gettid());
         //test if producer exists:
-        if(f->set_queue!=NULL){
+        if(f->set_queue.thread!=0){
             tid_typ prod=peek(f->set_queue);
             ready(prod,RESCHED_YES);
             //replace next consumer:
-            queue * nextCons=f->get_queue->next;
-            free(f->get_queue);
-            f->get_queue=nextCons;
+            queue * nextCons=f->get_queue.next;
+            free(&(f->get_queue));
+            f->get_queue=*nextCons;
         }
         //put current thread to wait
         thrtab[gettid()].state=THRWAIT;

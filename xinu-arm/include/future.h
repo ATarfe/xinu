@@ -26,14 +26,14 @@ typedef struct futent
     int flag;
     int state;                                    
     tid_typ tid;
-    queue * set_queue;
-    queue * get_queue;
+    queue set_queue;
+    queue get_queue;
 }future;
 /* Interface for system call */
 future* future_alloc(int future_flags);
 syscall future_free(future*);
 syscall future_get(future*, int*);
 syscall future_set(future*, int*);
-tid_typ peek(queue *q);
+tid_typ peek(queue q);
 void add_to_queue(queue *q,tid_typ thr);
 #endif /* _FUTURE_H_ */

@@ -16,6 +16,6 @@ void add_to_queue(queue *q,tid_typ thr){
     ((queue*)(q->next))->next=NULL;
 }
 
-tid_typ peek(queue *q){
-    return q->thread;
+tid_typ peek(queue q){
+    return q.thread;
 }
