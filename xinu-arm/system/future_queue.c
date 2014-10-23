@@ -1,21 +1,23 @@
 #include <future.h>
 #include <thread.h>
 #include <stdlib.h>
-void add_to_queue(queue *q,tid_typ thr){
+void add_to_queue(queue **q,tid_typ thr){
     if(q==NULL){
-        q=(queue*)(malloc(sizeof(queue)));
-        q->thread=thr;
-        q->next=NULL;
+        printf("adding: queue head at %x\n\r",q);
+        *q=(queue*)(malloc(sizeof(queue)));
+        (*q)->thread=thr;
+        (*q)->next=NULL;
         return;
     }
-    while(q->next!=NULL){
-        q=q->next;
+    queue * currentqueue=*q;
+    while(currentqueue->next!=NULL){
+        currentqueue=currentqueue->next;
     }
-    q->next=(queue*)malloc(sizeof(queue));
-    ((queue*)(q->next))->thread=thr;
-    ((queue*)(q->next))->next=NULL;
+    currentqueue->next=(queue*)malloc(sizeof(queue));
+    ((queue*)(currentqueue->next))->thread=thr;
+    ((queue*)(currentqueue->next))->next=NULL;
 }
 
-tid_typ peek(queue q){
-    return q.thread;
+tid_typ peek(queue *q){
+    return q->thread;
 }

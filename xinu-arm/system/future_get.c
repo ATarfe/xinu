@@ -49,40 +49,42 @@ syscall future_get(future *f, int *value){
         }
     }
     else 
-    if (f->flag==FUTURE_SHARED && (f->state==FUTURE_WAITING || f->state==FUTURE_EMPTY)){
+    if (f->flag==FUTURE_SHARED ){
+      if(f->state==FUTURE_WAITING || f->state==FUTURE_EMPTY){
         irqmask im=disable();
 
         if(f->state!=FUTURE_WAITING){
             f->state=FUTURE_WAITING;
         }
         add_to_queue(&(f->get_queue),gettid());
-        //debug
-        /*
-        printf("get:future is shared\n\r");
-        restore(im);
-        return OK;
-        */
-        //end debug
+        printf("getqueue:%d,%d\n\r",f->get_queue->thread,gettid());
         //put current thread to wait
         thrtab[gettid()].state=THRWAIT;
         //reschedule
         resched();
         //restore interrupts
         restore(im);
+        printf("fut_get_shr\n\r");
         if(f->state==FUTURE_VALID){
             *value=*(f->value);
             //wake up next consumer in queue, if valid:
             im=disable();
-            if(f->get_queue.thread!=0){
+            if(f->get_queue!=0){
                 tid_typ listener=peek(f->get_queue);
                 ready(listener,RESCHED_YES);
-                queue *nextinqueue=f->get_queue.next;
-                free(&(f->get_queue));
-                f->get_queue=*nextinqueue;
+                queue *nextinqueue=f->get_queue->next;
+                free((f->get_queue));
+                f->get_queue=nextinqueue;
             }
             restore(im);
             return OK;
         }
+      }
+      else if(f->state==FUTURE_VALID){
+        *value=*(f->value);
+        //just consume:
+        return OK;
+      }
     }
     else 
     if (f->flag==FUTURE_QUEUE && (f->state==FUTURE_WAITING || f->state==FUTURE_EMPTY)){
@@ -92,13 +94,13 @@ syscall future_get(future *f, int *value){
         }
         add_to_queue(&(f->get_queue),gettid());
         //test if producer exists:
-        if(f->set_queue.thread!=0){
+        if(f->set_queue!=0){
             tid_typ prod=peek(f->set_queue);
             ready(prod,RESCHED_YES);
             //replace next consumer:
-            queue * nextCons=f->get_queue.next;
-            free(&(f->get_queue));
-            f->get_queue=*nextCons;
+            queue * nextCons=f->get_queue->next;
+            free((f->get_queue));
+            f->get_queue=nextCons;
         }
         //put current thread to wait
         thrtab[gettid()].state=THRWAIT;

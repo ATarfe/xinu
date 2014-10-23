@@ -20,5 +20,9 @@
  * return : syscall
  */
 syscall future_free(future* f){
+    if (f->set_queue!=NULL)
+        free(f->set_queue);
+    if (f->get_queue!=NULL)
+        free(f->get_queue);
     return memfree(f,sizeof(future))!=SYSERR? OK : SYSERR;
 }
