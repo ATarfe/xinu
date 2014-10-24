@@ -1,23 +1,39 @@
 #include <future.h>
 #include <thread.h>
 #include <stdlib.h>
-void add_to_queue(queue **q,tid_typ thr){
-    if(q==NULL){
-        printf("adding: queue head at %x\n\r",q);
-        *q=(queue*)(malloc(sizeof(queue)));
-        (*q)->thread=thr;
-        (*q)->next=NULL;
-        return;
+
+
+void put_thread_to_sleep(tid_typ tid){
+    //interrupts must be disabled already!
+    //put thread state to wait
+    thrtab[tid].state=THRWAIT;
+    //reschedule
+    resched();
+}
+
+//add to queue
+//queue must be valid.
+void add_to_queue(queue *q,tid_typ thr){
+    while(q->next!=NULL){
+        q=q->next;
     }
-    queue * currentqueue=*q;
-    while(currentqueue->next!=NULL){
-        currentqueue=currentqueue->next;
-    }
-    currentqueue->next=(queue*)malloc(sizeof(queue));
-    ((queue*)(currentqueue->next))->thread=thr;
-    ((queue*)(currentqueue->next))->next=NULL;
+    q->next=(queue*)malloc(sizeof(queue));
+    ((queue*)(q->next))->thread=thr;
+    ((queue*)(q->next))->next=NULL;
 }
 
 tid_typ peek(queue *q){
     return q->thread;
+}
+
+//pop first element of queue
+void pop(queue *q){
+    queue * next=q->next;
+    if(next==NULL){
+        q->thread=-1;
+        return;
+    }
+    q->next=next->next;
+    q->thread=next->thread;
+    free(next);
 }

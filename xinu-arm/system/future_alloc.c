@@ -36,9 +36,10 @@ future* future_alloc(int future_flag){
     f->flag=future_flag;
     f->state=FUTURE_EMPTY;
     f->tid=NULL;
+    f->value=malloc(4);
     (f->set_queue)=NULL;
     (f->get_queue)=NULL;
-    printf("future is allocated with flag=%d\n\r",f->flag);
+    //printf("future is allocated with flag=%d\n\r",f->flag);
     return f;
 }
 

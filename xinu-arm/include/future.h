@@ -35,5 +35,7 @@ syscall future_free(future*);
 syscall future_get(future*, int*);
 syscall future_set(future*, int*);
 tid_typ peek(queue* q);
-void add_to_queue(queue **q,tid_typ thr);
+void add_to_queue(queue *q,tid_typ thr);
+void put_thread_to_sleep(tid_typ tid);
+void pop(queue *q);
 #endif /* _FUTURE_H_ */
