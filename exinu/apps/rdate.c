@@ -1,6 +1,8 @@
 /*
  * @file     rdate.c
+ * @provides rdate
  *
+ * $Id: rdate.c 2124 2009-11-11 23:41:30Z kthurow $
  */
 /* Embedded Xinu, Copyright (C) 2008.  All rights reserved. */
 
@@ -51,7 +53,8 @@ long getRdate(char *dest)
 
     localhost = &(interface->ip);
 
-    if (SYSERR == open(dev, localhost, &host, NULL, UDP_PORT_RDATE))
+    if (SYSERR ==
+        open(dev, localhost, &host, UDP_PORT_RDATE, UDP_PORT_RDATE))
     {
         return SYSERR;
     }
@@ -74,7 +77,7 @@ long getRdate(char *dest)
         return SYSERR;
     }
 
-    /* convert bytes to long */
+    /* convert byes to long */
     return (buf[0] << 24) + (buf[1] << 16) + (buf[2] << 8) + buf[3];
 }
 

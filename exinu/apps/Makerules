@@ -4,7 +4,7 @@
 COMP = apps
 
 # Source files for this component
-C_FILES = date.c rdate.c timeserver.c
+C_FILES = date.c rdate.c hello.c consumer.c producer.c future_prod.c future_cons.c
 
 S_FILES =
 
