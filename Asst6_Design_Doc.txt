@@ -1,0 +1,82 @@
+Design Document for
+Assignment 6
+P536 - Advanced Operating Systems
+October 23, 2014
+
+Authors:
+Peter Zhang (yz79)
+Eriya Terada (eterada)
+
+
+- SEMAPHORES -
+Since the FUTURE_SHARED and FUTURE_QUEUE modes requires the use of semaphores,
+we looked into how those were implemented in the xinu system, and basically
+decided to disable interrupts while we needed to be inside of a critical
+section. This is done via:
+
+  irqmask im=disable();
+  // Critical section
+  restore(im);
+
+
+
+
+- BLOCKING THREADS - 
+Because we need both producer and consumer threads to block in certain
+situations (e.g. a consumer wanting to get a value from a future before a
+producer comes into existence, or a producer arriving before anything else), we
+also looked into how xinu blocks threads, and implemented the following function,
+which basically takes a thread id and puts it to sleep:
+
+  void put_thread_to_sleep(tid_typ tid){
+      thrtab[tid].state=THRWAIT;
+      resched();
+  }
+
+
+When we are ready to wake up a thread, we do:
+
+  ready(tid,RESCHED_YES);
+
+
+While implementing FUTURE_SHARED was rather straight forward, implementing
+FUTURE_QUEUE required more thought into how the producer/consumer threads slept
+and woke each other up. These are the possible scenarios that we encounter and 
+their solutions:
+
+1. Producer is the first thing to arrive (i.e., one producer, no consumers)
+   The producer will put itself to sleep.
+
+2. Consumer is the first thing to arrive (i.e., one consumer, no producers)
+   The consumer will put itself to sleep.
+
+3. Producer comes in when consumer is waiting.
+   The producer wakes up the consumer at the head of the get_queue and goes on about
+   its business.
+
+4. Consumer comes in when producer is waiting.
+   The consumer wakes up the producer at the head of the set_queue and goes on about
+   its business.
+
+For the other situations where producers/consumers try to manipulate a future
+when they are not supposed to, we followed the instructions provided with this
+assignment.
+
+
+
+
+- QUEUE IMPLEMENTATION -
+The code for our queue is located in xinu-arm/system/future_queue.c.
+For this assignment, it is  basically linked list of thread ids.
+The main functions are:
+
+  void add_to_queue(queue *q,tid_typ thr)
+  - Takes a pointer to a queue, and adds the thread id to the queue.
+
+  tid_typ peek(queue *q)
+  - Returns the thread id in front of the queue.
+
+  void pop(queue *q)
+  - Pops the thread id at the front of the queue.
+
+
