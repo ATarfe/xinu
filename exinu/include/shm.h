@@ -13,8 +13,6 @@
 
 #define IPC_MAX_SEG 1024 
 
-int ipc_seq;
-int32_t ipc_keymap[IPC_MAX_SEG];
 
 typedef int32_t key_t;
 
@@ -27,7 +25,6 @@ struct shmid_ds
     short           shm_nattch;      /* no. of current attaches */
 };
 
-struct shmid_ds ipc_seg[IPC_MAX_SEG];
 
 int shmget ( key_t key, int size, int shmflg );
 

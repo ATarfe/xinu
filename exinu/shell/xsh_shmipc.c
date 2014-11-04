@@ -1,20 +1,40 @@
 /* courtesy : [System V] */
 
-#include <shm.h>
 #include <stdio.h>
 #include <stdint.h>
 #include <stdlib.h>
 #include <kernel.h>
+#include <shm.h>
 
 #define SEGSIZE 100
 #define KEY     1
 
-void usage();
-void writeshm(int shmid, char *segptr, char *text);
-void removeshm(int shmid);
-void readshm(int shmid, char *segptr);
+void writeshm(int shmid, char *segptr, char *text)
+{
+        strcpy(segptr, text);
+        printf("Wrote to shared memory segment #%d\n", shmid);
+}
 
-shellcmd shmipc(int argc, char *argv[])
+void readshm(int shmid, char *segptr)
+{
+        printf("Contents of shared memory segment #%d: %s\n", shmid, segptr);
+}
+
+void removeshm(int shmid)
+{
+        shmdt(shmid);
+        printf("Detached shared memory segment #%d\n", shmid);
+}
+
+void usage()
+{
+        fprintf(stderr, "shmipc - A utility for tinkering with shared memory\n");
+        fprintf(stderr, "\nUSAGE:  shmipc (w)rite <text>\n");
+        fprintf(stderr, "                (r)ead\n");
+        fprintf(stderr, "                (d)elete\n");
+}
+
+shellcmd xsh_shmipc(int argc, char *argv[])
 {
         key_t key = KEY;            /* NOTE: all invocations use the same key */
         int   shmid, cntr;
@@ -64,27 +84,3 @@ shellcmd shmipc(int argc, char *argv[])
         }
 }
 
-void writeshm(int shmid, char *segptr, char *text)
-{
-        strcpy(segptr, text);
-        printf("Wrote to shared memory segment #%d\n", shmid);
-}
-
-void readshm(int shmid, char *segptr)
-{
-        printf("Contents of shared memory segment #%d: %s\n", shmid, segptr);
-}
-
-void removeshm(int shmid)
-{
-        shmdt(shmid);
-        printf("Detached shared memory segment #%d\n", shmid);
-}
-
-void usage()
-{
-        fprintf(stderr, "shmipc - A utility for tinkering with shared memory\n");
-        fprintf(stderr, "\nUSAGE:  shmipc (w)rite <text>\n");
-        fprintf(stderr, "                (r)ead\n");
-        fprintf(stderr, "                (d)elete\n");
-}

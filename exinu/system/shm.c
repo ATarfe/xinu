@@ -4,6 +4,10 @@
 #include <stdlib.h>
 #include <kernel.h>
 
+int ipc_seq;
+int32_t ipc_keymap[IPC_MAX_SEG];
+struct shmid_ds ipc_seg[IPC_MAX_SEG];
+
 int shmget ( key_t key, int size, int shmflg ){
     //first check if key already exists:
     int i, ipc_segment_id=-1;
