@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include <stdint.h>
 #include <stdlib.h>
+#include <string.h>
 #include <kernel.h>
 #include <shm.h>
 
@@ -52,7 +53,7 @@ shellcmd xsh_shmipc(int argc, char *argv[])
             if((shmid = shmget(key, SEGSIZE, accessflags)) == -1) 
             {
                 fprintf(stderr,"shmget : create, access\n");
-                return;
+                return OK;
             }
             printf("Opened shared memory segment #%d\n", shmid);
         }
@@ -65,7 +66,7 @@ shellcmd xsh_shmipc(int argc, char *argv[])
         if((segptr = (char *) shmat( shmid )) == (char *) -1)
         {
             fprintf(stderr,"shmat\n");
-            return;
+            return OK;
         }
 
         switch((argv[1][0]))
