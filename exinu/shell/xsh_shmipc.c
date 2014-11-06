@@ -43,6 +43,35 @@ shellcmd xsh_shmipc(int argc, char *argv[])
         int createflags = IPC_CREAT;
         int accessflags = IPC_ACCES;    /* NOTE : access != create */
 
+
+		int one = shmget(1, SEGSIZE, createflags);	
+		int two = shmget(2, SEGSIZE, createflags);
+		
+		int three = shmget(3, SEGSIZE, createflags);
+		
+		
+		strcpy(shmat(one), "one");
+		printf("Wrote to shared memory segment #%d\n", one);
+		
+		strcpy(shmat(two), "two");
+		printf("Wrote to shared memory segment #%d\n", two);
+		
+		strcpy(shmat(three), "three");
+		printf("Wrote to shared memory segment #%d\n", three);
+		
+		
+		printf("Contents of shared memory segment #%d: %s\n", one, shmat(one));
+		printf("Contents of shared memory segment #%d: %s\n", two, shmat(two));
+		printf("Contents of shared memory segment #%d: %s\n", three, shmat(three));
+		
+		removeshm(one);
+		removeshm(two);		
+		removeshm(three);
+		
+		return OK;
+
+
+#if 0
         if(argc == 1){
             usage();
             return SYSERR;
@@ -85,5 +114,7 @@ shellcmd xsh_shmipc(int argc, char *argv[])
                 */
                 default: usage();
         }
+        
+#endif
 }
 

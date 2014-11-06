@@ -51,7 +51,8 @@ uint32_t get_key_seg(key_t key){
         if(current->key==key){
             return current;
         }
-        current=shmqueue->prev;
+
+        current=current->prev;
     }
     return -1;
 }
@@ -90,7 +91,7 @@ int shmget ( key_t key, int size, int shmflg ){
             //fprintf(stderr,"shm access error: key already exists\n\r");
             return -1;
             
-        }
+        }    
         //disable interrupts for mutex access
         irqmask im=disable();
         struct shmid_ds current_segment;
