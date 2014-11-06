@@ -1,0 +1,27 @@
+Design Document for
+Assignment 7
+P536 - Advanced Operating Systems
+November 6, 2014
+
+Authors:
+Peter Zhang (yz79)
+Eriya Terada (eterada)
+
+
+This implementation of a shared memory mechanism uses a linked list which servers as a container
+to store the key and shared segment id information.
+
+- Whenever we need a new shared segment, we add a new node to this linked list.
+- Whenever we need to access a shared segment, we just walk through this linked list until we
+  find the node having the key.
+- Whenever we need to delete a shared segment, we only remove the node in question and keep the
+linked list in-tact.
+
+
+We disable interrupts whenever we need to modify this linked list in order to maintain mutual exclusivity.
+
+
+The shared segment id returned by shmget is the address of the node (which is the shared memory
+container) in which the shared memory segment is located.
+
+Other than that, we followed the instructions provided in "hw7.pdf".

@@ -1,13 +1,15 @@
-Assignment 6
+README for Assignment 7
 P536 - Advanced Operating Systems
-October 23, 2014
+November 6, 2014
 
 Authors:
 Peter Zhang (yz79)
 Eriya Terada (eterada)
 
-For this assignment we added the FUTURE_SHARED and FUTURE_QUEUE modes of
-operation from what we had for Assignment 5, which was only FUTURE_EXCLUSIVE.
 
-How work was split up:
-We pair-programmed.
+We implemented a shared memory IPC mechanism for our Xinu system as described by the assignment instructions.
+
+You may use the command "shmipc" to see a working implementation of the shared memory,
+where we basically create three shared segments, write to them, read from them, and delete
+them.
+
