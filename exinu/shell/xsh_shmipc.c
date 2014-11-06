@@ -43,8 +43,10 @@ shellcmd xsh_shmipc(int argc, char *argv[])
         int createflags = IPC_CREAT;
         int accessflags = IPC_ACCES;    /* NOTE : access != create */
 
-        if(argc == 1)
+        if(argc == 1){
             usage();
+            return SYSERR;
+        }
 
         /* Open the shared memory segment - create if necessary */
         if((shmid = shmget(key, SEGSIZE, createflags)) == -1) 
@@ -81,7 +83,7 @@ shellcmd xsh_shmipc(int argc, char *argv[])
                 case 'm': changemode(shmid, argv[2]);
                           break;
                 */
-                 default: usage();
+                default: usage();
         }
 }
 
