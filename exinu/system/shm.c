@@ -58,8 +58,12 @@ uint32_t get_key_seg(key_t key){
 
 void destroy_shmseg(int shmseg_id){
     shmseg* seg=(shmseg*)shmseg_id;
-    seg->prev->next=seg->next;
-    seg->next->prev=seg->prev;
+    if(seg->prev!=NULL){
+        seg->prev->next=seg->next;
+    }
+    if(seg->next!=NULL){
+        seg->next->prev=seg->prev;
+    }
     free(seg);
 }
 
@@ -74,7 +78,7 @@ int shmget ( key_t key, int size, int shmflg ){
             return ipc_segment_id;
         }
         else{
-            fprintf(stderr,"shm access error: key doesn't exist\n\r");
+            //fprintf(stderr,"shm access error: key doesn't exist\n\r");
             return -1;
         }
     }
@@ -83,7 +87,7 @@ int shmget ( key_t key, int size, int shmflg ){
 
     else if(shmflg==IPC_CREAT){
         if(ipc_segment_id!=-1){
-            fprintf(stderr,"shm access error: key already exists\n\r");
+            //fprintf(stderr,"shm access error: key already exists\n\r");
             return -1;
             
         }
@@ -117,9 +121,11 @@ int shmdt ( int shmid ){
     struct shmid_ds current_segment=seg->seg;
     //dettach:
     current_segment.shm_nattch-=1;
+    current_segment.shm_lpid=gettid();
     if (current_segment.shm_nattch==0){
         //free shm segment:
         memfree(current_segment.shm_seg, current_segment.shm_segsz);
+        memset(seg,0,sizeof(shmseg));
         //destroy container:
         destroy_shmseg(shmid);
     }
