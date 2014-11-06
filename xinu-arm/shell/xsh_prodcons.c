@@ -26,7 +26,7 @@ shellcmd xsh_prodcons(int argc, char *argv[])
   uint8_t use_future=0;
 
   //Print nice things if number of arguments provided is wrong
-  printf("args:%d\n",argc);
+  //printf("args:%d\n",argc);
   if (argc > 3){
     fprintf(stderr,"Too many arguments!\n");
     fprintf(stderr,"Usage:\nprodcons <-f> <count: int>\n");
@@ -101,15 +101,16 @@ shellcmd xsh_prodcons(int argc, char *argv[])
     resume(  create(future_cons,  1024,  20,  "fcons6",  1,  f_queue)  );
     resume(  create(future_cons,  1024,  20,  "fcons7",  1,  f_queue)  );
     resume(  create(future_cons,1024,  20,  "fcons7",  1,  f_queue)  );
-
     resume(  create(future_cons,  1024,  20,  "fcons7",  1,  f_queue)  );
+
     resume(  create(future_prod,  1024,  20,  "fprod3",  1,  f_queue)  );
     resume(  create(future_prod,  1024,  20,  "fprod4",  1,  f_queue)  );
     resume(  create(future_prod,  1024,  20,  "fprod5",  1,  f_queue)  );
     resume(  create(future_prod,  1024,  20,  "fprod6",  1,  f_queue) );
+
     future_free(f_exclusive);
     future_free(f_shared); 
-    //future_free(f_queue); 
+    future_free(f_queue); 
   }
   return OK;											
 }	
