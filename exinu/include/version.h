@@ -1,1 +1,1 @@
-#define VERSION "(Embedded Xinu) (arm-qemu) #13 (yassen@kulta) to 6.11.2014 18.07.04 -0500"
+#define VERSION "(Embedded Xinu) (arm-qemu) #28 (eterada@silo.soic.indiana.edu) 2014年 12月 2日 火曜日 02:10:27 EST"

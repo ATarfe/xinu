@@ -51,6 +51,9 @@ C_FILES += xsh_test.c xsh_testsuite.c
 
 C_FILES += xsh_shmipc.c
 
+# Assignment 8
+C_FILES += xsh_fstest.c
+
 S_FILES =
 
 # Add the files to the compile source path
