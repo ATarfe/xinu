@@ -45,7 +45,7 @@ int get_next_free_block(){
     return -1;
 }
 
-int fopen(char *filename, int flags)
+int fopen(char *filename, int flags) // TO-DO: what to do with flags?
 {   
     int i;
     struct inode in;
@@ -100,6 +100,14 @@ int fopen(char *filename, int flags)
 }
 int fclose(int fd)
 {
+    // check if fd is valid
+    if ((fd > next_open_fd) || (fd < 0)){
+        fprintf(stderr, "fs::fclose: not valid fd\n\r");
+        return SYSERR;
+    }
+
+    oft[fd] = FSTATE_CLOSED;
+    return OK;
 }
 int fcreate(char *filename, int mode)
 {
