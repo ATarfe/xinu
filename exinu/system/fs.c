@@ -31,7 +31,32 @@ int next_open_fd = 0;
 
 int fileblock_to_diskblock(int dev, int fd, int fileblock);
 
-/* Your code goes here! */
+int fopen(char *filename, int flags)
+{
+}
+int fclose(int fd)
+{
+}
+int fcreate(char *filename, int mode)
+{
+    if(mode==0_CREAT){
+        //TODO:parse complex filename.: 
+        //TODO: it seems that the spec didnt provide mkdir as a func?!
+        //for now, just assume file is created in the current dir
+         
+        return OK;
+    }
+    else return SYSERR;
+}
+int fseek(int fd, int offset)
+{
+}
+int fread(int fd, void *buf, int nbytes)
+{
+}
+int fwrite(int fd, void *buf, int nbytes)
+{
+}
 
 int mkfs(int dev, int num_inodes) {
   int i;
@@ -187,7 +212,7 @@ int clearmaskbit(int b) {
   return OK;
 }
 
-* This is maybe a little overcomplicated since the lowest-numbered
+/* This is maybe a little overcomplicated since the lowest-numbered
    block is indicated in the high-order bit.  Shift the byte by j
    positions to make the match in bit7 (the 8th bit) and then shift
    that value 7 times to the low-order bit to print.  Yes, it could be
