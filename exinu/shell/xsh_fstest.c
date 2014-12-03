@@ -67,6 +67,9 @@ void testbitmask(void);
         j = j+33;
         buf1[i] = (char) j;
     }
+
+    //debug:
+    printf("debug:buffer content:\n\r%s\n\r",buf1);
     
     rval = fwrite(fd,buf1,SIZE);
     if(rval == 0 || rval != SIZE )

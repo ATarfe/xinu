@@ -16,6 +16,8 @@ extern int dev0;
 
 char block_cache[512];
 
+#define DEBUG 0
+
 #define SB_BLK 0
 #define BM_BLK 1
 #define RT_BLK 2
@@ -124,11 +126,13 @@ int fcreate(char *filename, int mode)
         }
         //request entry in filetable:
         int fd=next_open_fd++;
-        struct filetable ft=oft[fd];
+        struct filetable ft;
         ft.state=FSTATE_OPEN;
         ft.fileptr=0;
         ft.de=&(dir.entry[dir.numentries++]);
         strcpy((ft.de)->name, filename);
+        //copy ft to oft:
+        memcpy(oft+fd,&ft,sizeof(struct filetable));
         struct inode in;
         in.id=inode_id++;
         in.type=INODE_TYPE_FILE;
@@ -142,6 +146,9 @@ int fcreate(char *filename, int mode)
         memcpy(&(ft.in),&in,sizeof(struct inode));
         //update fsystem
         fsd.inodes_used++;
+#if DEBUG
+        printf("debug: file %s created. fd=%d,oft[%d].state=%d\n\r",filename,fd,fd,oft[fd].state);
+#endif
          
         return fd;
     }
@@ -159,8 +166,8 @@ int fread(int fd, void *buf, int nbytes)
 {
     //first, get the file table entry:
     struct filetable ft=oft[fd];
-    if(ft.state==O_WRONLY){
-        fprintf(stderr, "fs::fread(): file opened as wo.\n\r");
+    if(ft.state==FSTATE_CLOSED){
+        fprintf(stderr, "error %d. fs::fread(): invalid descriptor.\n\r",ft.state);
         return SYSERR;
     }
     struct inode in = ft.in;
@@ -195,12 +202,20 @@ int fread(int fd, void *buf, int nbytes)
     }
     return SYSERR;
 }
+/**
+ * return size wrote
+ */
 int fwrite(int fd, void *buf, int nbytes)
 {
+    int orig_nbytes=nbytes;
     //first, get the file table entry:
     struct filetable ft=oft[fd];
-    if(ft.state==O_RDONLY){
-        fprintf(stderr, "fs::fwrite(): file opened as ro.\n\r");
+#if DEBUG
+    printf("debug:write:fd=%d\n\r",fd);
+#endif
+   
+    if(ft.state==FSTATE_CLOSED){
+        fprintf(stderr, "error %d. fs::fwrite(): invalid descriptor.\n\r",ft.state);
         return SYSERR;
     }
     struct inode in = ft.in;
@@ -216,12 +231,12 @@ int fwrite(int fd, void *buf, int nbytes)
                 //incr fileptr:
                 ft.fileptr+=nbytes;
                 nbytes=0;
-                return OK;
+                return orig_nbytes;
             }
             else{
                 if(inodeblk==INODEBLOCKS-1){
                     fprintf(stderr, "fs::fwrite(): requested bytes exceeds limit, wrote valid values only.\n\r");
-                    return OK;
+                    return orig_nbytes-nbytes;
                 }
                 bwrite(0,dst_blk,inodeoffset,buf,fsd.blocksz-inodeoffset);
                 buf+=(fsd.blocksz-inodeoffset);
@@ -233,7 +248,7 @@ int fwrite(int fd, void *buf, int nbytes)
             }
         }
     }
-    return SYSERR;
+    return orig_nbytes-nbytes;
 }
 
 
