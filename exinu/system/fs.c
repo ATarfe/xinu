@@ -68,7 +68,7 @@ int fcreate(char *filename, int mode)
         int fd=next_open_fd++;
         struct filetable ft=oft[fd];
         ft.state=FSTATE_OPEN;
-        ft.fileptr=fd;
+        ft.fileptr=0;
         ft.de=&(dir.entry[dir.numentries++]);
         strcpy((ft.de)->name, filename);
         struct inode in;
@@ -80,6 +80,8 @@ int fcreate(char *filename, int mode)
         int bl = in.id / INODES_PER_BLOCK;
         bl += FIRST_INODE_BLOCK;
         setmaskbit(bl);
+        //write inode to filetable
+        memcpy(&(ft.in),&in,sizeof(struct inode));
         //update fsystem
         fsd.inodes_used++;
          
@@ -89,12 +91,91 @@ int fcreate(char *filename, int mode)
 }
 int fseek(int fd, int offset)
 {
+    //first, get the file table entry:
+    struct filetable ft=oft[fd];
+    //update fileptr
+    ft.fileptr=offset;
+    return fd;
 }
 int fread(int fd, void *buf, int nbytes)
 {
+    //first, get the file table entry:
+    struct filetable ft=oft[fd];
+    if(ft.state==O_WRONLY){
+        fprintf(stderr, "fs::fread(): file opened as wo.\n\r");
+        return SYSERR;
+    }
+    struct inode in = ft.in;
+    //calculate inode block for fileptr:
+    int inodeblk= (ft.fileptr / fsd.blocksz);
+    int inodeoffset=(ft.fileptr % fsd.blocksz);
+    if (inodeblk<INODEBLOCKS){
+        int dst_blk=in.blocks[inodeblk];
+        while(nbytes>0){
+            //if all data we want is in same block
+            if(nbytes<(fsd.blocksz-inodeoffset)){
+                bread(0,dst_blk,inodeoffset,buf,nbytes);
+                //incr fileptr:
+                ft.fileptr+=nbytes;
+                nbytes=0;
+                return OK;
+            }
+            else{
+                if(inodeblk==INODEBLOCKS-1){
+                    fprintf(stderr, "fs::fread(): requested bytes exceeds limit, wrote valid values only.\n\r");
+                    return OK;
+                }
+                bread(0,dst_blk,inodeoffset,buf,fsd.blocksz-inodeoffset);
+                buf+=(fsd.blocksz-inodeoffset);
+                nbytes-=(fsd.blocksz-inodeoffset);
+                ft.fileptr+=(fsd.blocksz-inodeoffset);
+                //cross over to next block
+                dst_blk=in.blocks[++inodeblk];
+                inodeoffset=0;
+            }
+        }
+    }
+    return SYSERR;
 }
 int fwrite(int fd, void *buf, int nbytes)
 {
+    //first, get the file table entry:
+    struct filetable ft=oft[fd];
+    if(ft.state==O_RDONLY){
+        fprintf(stderr, "fs::fwrite(): file opened as ro.\n\r");
+        return SYSERR;
+    }
+    struct inode in = ft.in;
+    //calculate inode block for fileptr:
+    int inodeblk= (ft.fileptr / fsd.blocksz);
+    int inodeoffset=(ft.fileptr % fsd.blocksz);
+    if (inodeblk<INODEBLOCKS){
+        int dst_blk=in.blocks[inodeblk];
+        while(nbytes>0){
+            //if all data we want to write can be put in same block
+            if(nbytes<(fsd.blocksz-inodeoffset)){
+                bwrite(0,dst_blk,inodeoffset,buf,nbytes);
+                //incr fileptr:
+                ft.fileptr+=nbytes;
+                nbytes=0;
+                return OK;
+            }
+            else{
+                if(inodeblk==INODEBLOCKS-1){
+                    fprintf(stderr, "fs::fwrite(): requested bytes exceeds limit, wrote valid values only.\n\r");
+                    return OK;
+                }
+                bwrite(0,dst_blk,inodeoffset,buf,fsd.blocksz-inodeoffset);
+                buf+=(fsd.blocksz-inodeoffset);
+                nbytes-=(fsd.blocksz-inodeoffset);
+                ft.fileptr+=(fsd.blocksz-inodeoffset);
+                //cross over to next block
+                dst_blk=in.blocks[++inodeblk];
+                inodeoffset=0;
+            }
+        }
+    }
+    return SYSERR;
 }
 
 
