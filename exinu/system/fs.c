@@ -47,21 +47,6 @@ int getmaskbit(int b)
 {
 }
 
-/*
-    Block Store functions
-    bread, bwrite,
-    bput, bget write entire blocks (macro with offset=0, len=blocksize)
-*/
-int mkbsdev(int dev, int blocksize, int numblocks)
-{
-}
-int bread(int bsdev, int block, int offset, void *buf, int len)
-{
-}
-int bwrite(int bsdev, int block, int offset, void * buf, int len)
-{
-}
-
 /* debugging functions */
 void printfreemask(void)
 {

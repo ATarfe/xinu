@@ -40,6 +40,8 @@ C_FILES += tar.c
 
 C_FILES += shm.c
 
+C_FILES += fs.c bs.c
+
 # Add the files to the compile source path
 DIR = ${TOPDIR}/${COMP}
 COMP_SRC += ${C_FILES:%=${DIR}/%}
