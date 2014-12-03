@@ -83,10 +83,10 @@ int fopen(char *filename, int flags)
             */
 
             // Put stuff in open file table
-            oft[next_open_fd].state = flags; // not sure
+            oft[next_open_fd].state = FSTATE_OPEN;
             oft[next_open_fd].fileptr = 0;
-            oft[next_open_fd].de = &dir.entry[i];
-            oft[next_open_fd].in = in;
+            oft[next_open_fd].de = &(dir.entry[i]);
+	        memcpy(&(oft[next_open_fd].in),&in,sizeof(struct inode));
             
             // Increment next open fd, which is basically the next available index for oft
             next_open_fd++;
@@ -96,7 +96,7 @@ int fopen(char *filename, int flags)
     }
 
     fprintf(stderr, "fs::fopen(): file does not exist\n\r");
-    return -1;
+    return SYSERR;
 }
 int fclose(int fd)
 {
