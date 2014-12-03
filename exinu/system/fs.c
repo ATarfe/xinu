@@ -44,7 +44,57 @@ int get_next_free_block(){
 }
 
 int fopen(char *filename, int flags)
-{
+{   
+    int i;
+    struct inode in;
+    int inode_num;
+    
+    // Look up file name in root dir
+    struct directory dir = fsd.root_dir;
+    
+    for (i = 0; i < dir.numentries; i++){
+        // If root dir has entry for filename of interest
+        if (strcmp(dir.entry[i].name, filename) == 0){
+            // Get its inode_num
+            inode_num = dir.entry[i].inode_num;
+	
+            // Get inode based on inode_num found above
+            // get_inode_by_num(int dev, int inode_number, struct inode *in)
+            get_inode_by_num(dev0, inode_num, &in);
+
+            /* for reference
+            struct inode {
+                int id;
+                short int type;
+                short int nlink;
+                int device;
+                int size;
+                int blocks[INODEBLOCKS];
+            };
+
+            struct filetable {
+                int state;
+                int fileptr;
+                struct dirent *de;
+                struct inode in;
+            };
+            */
+
+            // Put stuff in open file table
+            oft[next_open_fd].state = flags; // not sure
+            oft[next_open_fd].fileptr = 0;
+            oft[next_open_fd].de = &dir.entry[i];
+            oft[next_open_fd].in = in;
+            
+            // Increment next open fd, which is basically the next available index for oft
+            next_open_fd++;
+            
+            return next_open_fd - 1;
+        }
+    }
+
+    fprintf(stderr, "fs::fopen(): file does not exist\n\r");
+    return -1;
 }
 int fclose(int fd)
 {
