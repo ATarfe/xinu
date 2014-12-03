@@ -29,6 +29,8 @@ int next_open_fd = 0;
 #define NUM_INODE_BLOCKS (( (fsd.ninodes % INODES_PER_BLOCK) == 0) ? fsd.ninodes / INODES_PER_BLOCK : (fsd.ninodes / INODES_PER_BLOCK) + 1)
 #define FIRST_INODE_BLOCK 2
 
+int inode_id=1;
+
 int fileblock_to_diskblock(int dev, int fd, int fileblock);
 
 int get_next_free_block(){
@@ -52,25 +54,36 @@ int fclose(int fd)
 int fcreate(char *filename, int mode)
 {
     if(mode==0_CREAT){
-        //TODO:parse complex filename.: 
-        //TODO: it seems that the spec didnt provide mkdir as a func?!
-        //for now, just assume file is created in the current(root) dir
-        //I suppose we can deal with tracing down the sequence of directories
-        //later.
-        
         //get root dir:
         struct directory dir=fsd.root_dir;
-        //find free block for file metadata
-        int fileblk=get_next_free_block();
-        //create inode here:
+        //check if file name is valid. i.e., no file with same name exists
+        int i;
+        for(i=0;i<dir.numentries;i++){
+            if(!strcmp(filename,dir.entry[i].name)){
+                fprintf(stderr, "fs::fcreate(): file already exists.\n\r");
+                return SYSERR;
+            }
+        }
+        //request entry in filetable:
+        int fd=next_open_fd++;
+        struct filetable ft=oft[fd];
+        ft.state=FSTATE_OPEN;
+        ft.fileptr=fd;
+        ft.de=&(dir.entry[dir.numentries++]);
+        strcpy((ft.de)->name, filename);
         struct inode in;
-        in.id=fileblk;
+        in.id=inode_id++;
         in.type=INODE_TYPE_FILE;
         //write inode 
-
-        
+        put_inode_by_num(0,in.id,&in);
+        //mark destination block:
+        int bl = in.id / INODES_PER_BLOCK;
+        bl += FIRST_INODE_BLOCK;
+        setmaskbit(bl);
+        //update fsystem
+        fsd.inodes_used++;
          
-        return OK;
+        return fd;
     }
     else return SYSERR;
 }
