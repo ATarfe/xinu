@@ -9,7 +9,8 @@
 #define MDEV_BLOCK_SIZE 512
 #define MDEV_NUM_BLOCKS 512
 #define DEFAULT_NUM_INODES (MDEV_NUM_BLOCKS / 4)
-#define INODE_TYPE_FILE 1 #define INODE_TYPE_DIR 2
+#define INODE_TYPE_FILE 1 
+#define INODE_TYPE_DIR 2
 
 
 struct inode {
@@ -60,7 +61,8 @@ struct fsystem{
 };
 
 /* file and directory functions */
-int fopen(char *filename, int flags); int fclose(int fd);
+int fopen(char *filename, int flags); 
+int fclose(int fd);
 int fcreate(char *filename, int mode);
 int fseek(int fd, int offset);
 int fread(int fd, void *buf, int nbytes);

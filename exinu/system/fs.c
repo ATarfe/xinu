@@ -29,22 +29,15 @@ int fwrite(int fd, void *buf, int nbytes)
 /* filesystem functions */
 int mkfs(int dev, int num_inodes)
 {
-    //make bs dev:blocksize for default values:
-    if(OK==mkbsdev(
-                dev,
-                MDEV_BLOCK_SIZE,
-                num_inodes*ceil(((float)sizeof(inode)/(float)MDEV_BLOCK_SIZE)))
-            )
-    {
-        //init fsystem to block 0:
-        struct fsystem fs;
-        fs.nblocks=num_inodes*ceil(((float)sizeof(inode)/(float)MDEV_BLOCK_SIZE));
-        fs.blocksz=MDEV_BLOCK_SIZE;
-        fs.ninodes=num_inodes;
-        fs.inodes_used=0;
-        bwrite(dev,0,0,,sizeof(fsystem));
-    }
-    else return SYSERR;
+    //init fsystem to block 0:
+    struct fsystem fs;
+    fs.nblocks=dev0_numblocks;
+    fs.blocksz=dev0_blocksize;
+    fs.ninodes=num_inodes;
+    fs.inodes_used=0;
+
+    bwrite(dev,0,0,,sizeof(fsystem));
+    return OK;
 }
 int mount(int dev)
 {
