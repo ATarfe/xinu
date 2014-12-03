@@ -4,7 +4,7 @@
 #include <string.h>
 #include <bufpool.h>
 
-#if FS
+#if 1
 #include <fs.h>
 
 static struct fsystem fsd;
@@ -106,12 +106,12 @@ int fclose(int fd)
         return SYSERR;
     }
 
-    oft[fd] = FSTATE_CLOSED;
+    oft[fd].state = FSTATE_CLOSED;
     return OK;
 }
 int fcreate(char *filename, int mode)
 {
-    if(mode==0_CREAT){
+    if(mode==O_CREAT){
         //get root dir:
         struct directory dir=fsd.root_dir;
         //check if file name is valid. i.e., no file with same name exists

@@ -11,7 +11,7 @@ extern int dev0_blocksize;
 extern char *dev0_blocks;
 int dev0 = 0;
 
-#if FS
+#if 1
 #include <fs.h>
 
 int mkbsdev(int dev, int blocksize, int numblocks) {

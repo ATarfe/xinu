@@ -48,7 +48,7 @@ void testbitmask(void);
         return SYSERR;
     }
 
-#ifdef FS
+#if 1 
 
     mkbsdev(0, MDEV_BLOCK_SIZE, MDEV_NUM_BLOCKS); /* device "0" and default blocksize (=0) and count */
     mkfs(0,DEFAULT_NUM_INODES); /* bsdev 0*/
