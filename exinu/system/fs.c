@@ -31,6 +31,18 @@ int next_open_fd = 0;
 
 int fileblock_to_diskblock(int dev, int fd, int fileblock);
 
+int get_next_free_block(){
+    int i,block;
+    //might as well search linearly
+    for(i=0;i<fsd.nblocks;i++){
+        if(getmaskbit(0)==0){
+            return i;
+        }
+    }
+    fprintf(stderr, "fs::get_next_free_block(): cannot find a free block.\n\r");
+    return -1;
+}
+
 int fopen(char *filename, int flags)
 {
 }
@@ -42,7 +54,21 @@ int fcreate(char *filename, int mode)
     if(mode==0_CREAT){
         //TODO:parse complex filename.: 
         //TODO: it seems that the spec didnt provide mkdir as a func?!
-        //for now, just assume file is created in the current dir
+        //for now, just assume file is created in the current(root) dir
+        //I suppose we can deal with tracing down the sequence of directories
+        //later.
+        
+        //get root dir:
+        struct directory dir=fsd.root_dir;
+        //find free block for file metadata
+        int fileblk=get_next_free_block();
+        //create inode here:
+        struct inode in;
+        in.id=fileblk;
+        in.type=INODE_TYPE_FILE;
+        //write inode 
+
+        
          
         return OK;
     }
@@ -57,6 +83,7 @@ int fread(int fd, void *buf, int nbytes)
 int fwrite(int fd, void *buf, int nbytes)
 {
 }
+
 
 int mkfs(int dev, int num_inodes) {
   int i;
@@ -100,6 +127,13 @@ int mkfs(int dev, int num_inodes) {
   /* write the free block bitmask in BM_BLK, mark block used */
   setmaskbit(BM_BLK);
   bwrite(dev0, BM_BLK, 0, fsd.freemask, fsd.freemaskbytes);
+
+  //custom code: mod 12/2/14:
+  //add root dir:
+  
+  setmaskbit(RT_BLK);
+  bwrite(dev0, RT_BLK, 0, &(fsd.root_dir), sizeof(struct directory));
+
 
   return 1;
 }
