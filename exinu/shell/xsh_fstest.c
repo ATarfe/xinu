@@ -69,7 +69,7 @@ void testbitmask(void);
     }
 
     //debug:
-    printf("debug:buffer content:\n\r%s\n\r",buf1);
+    printf("debug:buffer content:\n\r%s",buf1);
     
     rval = fwrite(fd,buf1,SIZE);
     if(rval == 0 || rval != SIZE )
@@ -93,7 +93,7 @@ void testbitmask(void);
         goto clean_up;
     }
         
-    printf("\n\rContent of file %s",buf2);
+    printf("\n\rContent of file\n\r %s\n\r",buf2);
     
     rval = fclose(fd);
     if(rval != OK)

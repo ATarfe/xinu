@@ -39,7 +39,7 @@ int get_next_free_block(){
     int i,block;
     //might as well search linearly
     for(i=0;i<fsd.nblocks;i++){
-        if(getmaskbit(0)==0){
+        if(getmaskbit(i)==0){
             return i;
         }
     }
@@ -49,6 +49,7 @@ int get_next_free_block(){
 
 int fopen(char *filename, int flags) // TO-DO: what to do with flags?
 {   
+#if 0
     int i;
     struct inode in;
     int inode_num;
@@ -99,6 +100,42 @@ int fopen(char *filename, int flags) // TO-DO: what to do with flags?
 
     fprintf(stderr, "fs::fopen(): file does not exist\n\r");
     return SYSERR;
+#endif
+    if(flags>=0 && flags<=2){
+        //get root dir:
+        struct directory dir=fsd.root_dir;
+        //check if file name is valid. i.e., no file with same name exists
+        int i,fileloc=-1;
+        for(i=0;i<dir.numentries;i++){
+            if(strcmp(filename,dir.entry[i].name)){
+                fileloc=i;
+            }
+        }
+        if(fileloc==-1){
+            fprintf(stderr,"error. file %s not found.\n",filename);
+        }
+        //request entry in filetable:
+        int fd=next_open_fd++;
+        struct filetable ft;
+        ft.state=FSTATE_OPEN;
+        ft.fileptr=0;
+        ft.de=&(dir.entry[fileloc]);
+        strcpy((ft.de)->name, filename);
+        //copy ft to oft:
+        memcpy(oft+fd,&ft,sizeof(struct filetable));
+        struct inode in;
+        //read file metadata inode:
+        get_inode_by_num(0,ft.de->inode_num,&in);
+        //cp in to ft:
+        memcpy(&(ft.in),&in,sizeof(struct inode));
+
+#if DEBUG
+        printf("debug: file %s opened. fd=%d,oft[%d].state=%d\n\r",filename,fd,fd,oft[fd].state);
+#endif
+         
+        return fd;
+    }
+    else return SYSERR;
 }
 int fclose(int fd)
 {
@@ -144,6 +181,8 @@ int fcreate(char *filename, int mode)
         setmaskbit(bl);
         //write inode to filetable
         memcpy(&(ft.in),&in,sizeof(struct inode));
+        //write inode_id to dirent:inode_num
+        memcpy(&(ft.de->inode_num),&(in.id),sizeof(int));
         //update fsystem
         fsd.inodes_used++;
 #if DEBUG
@@ -164,11 +203,12 @@ int fseek(int fd, int offset)
 }
 int fread(int fd, void *buf, int nbytes)
 {
+    int orig_nbytes=nbytes;
     //first, get the file table entry:
     struct filetable ft=oft[fd];
     if(ft.state==FSTATE_CLOSED){
         fprintf(stderr, "error %d. fs::fread(): invalid descriptor.\n\r",ft.state);
-        return SYSERR;
+        return 0;
     }
     struct inode in = ft.in;
     //calculate inode block for fileptr:
@@ -176,21 +216,29 @@ int fread(int fd, void *buf, int nbytes)
     int inodeoffset=(ft.fileptr % fsd.blocksz);
     if (inodeblk<INODEBLOCKS){
         int dst_blk=in.blocks[inodeblk];
+#if DEBUG
+        printf("in.blocks=%x\n",in.blocks);
+#endif
         while(nbytes>0){
             //if all data we want is in same block
             if(nbytes<(fsd.blocksz-inodeoffset)){
                 bread(0,dst_blk,inodeoffset,buf,nbytes);
                 //incr fileptr:
                 ft.fileptr+=nbytes;
+                buf+=nbytes;
                 nbytes=0;
-                return OK;
+                return orig_nbytes;
             }
             else{
                 if(inodeblk==INODEBLOCKS-1){
                     fprintf(stderr, "fs::fread(): requested bytes exceeds limit, wrote valid values only.\n\r");
-                    return OK;
+                    return orig_nbytes-nbytes;
                 }
                 bread(0,dst_blk,inodeoffset,buf,fsd.blocksz-inodeoffset);
+#if DEBUG
+                printf("debug:fread:inodeoffset=%d,nbytes=%d,inodeblk=%d,dst_blk=%d\n",inodeoffset,nbytes,inodeblk,dst_blk);
+
+#endif
                 buf+=(fsd.blocksz-inodeoffset);
                 nbytes-=(fsd.blocksz-inodeoffset);
                 ft.fileptr+=(fsd.blocksz-inodeoffset);
@@ -200,7 +248,7 @@ int fread(int fd, void *buf, int nbytes)
             }
         }
     }
-    return SYSERR;
+    return orig_nbytes-nbytes;
 }
 /**
  * return size wrote
@@ -216,15 +264,34 @@ int fwrite(int fd, void *buf, int nbytes)
    
     if(ft.state==FSTATE_CLOSED){
         fprintf(stderr, "error %d. fs::fwrite(): invalid descriptor.\n\r",ft.state);
-        return SYSERR;
+        return 0;
     }
     struct inode in = ft.in;
     //calculate inode block for fileptr:
     int inodeblk= (ft.fileptr / fsd.blocksz);
     int inodeoffset=(ft.fileptr % fsd.blocksz);
     if (inodeblk<INODEBLOCKS){
-        int dst_blk=in.blocks[inodeblk];
+        int dst_blk;
         while(nbytes>0){
+#if DEBUG
+            printf("ft.in=%x\n",ft.in);
+#endif
+            if(in.blocks[inodeblk]==0){
+                //alloc new block
+                dst_blk=get_next_free_block();
+                memcpy(in.blocks+inodeblk,&dst_blk,sizeof(int));
+#if DEBUG
+                printf("in.blocks[inodeblk]=%d,expected:%d\n\r",in.blocks[inodeblk],dst_blk);
+                
+#endif
+                //copy in back to ft.in:
+                memcpy(&((oft+fd)->in),&(in),sizeof(struct inode));
+                //mark that block as visited...
+                setmaskbit(dst_blk);
+            }
+            else if(in.blocks[inodeblk]>0){
+                dst_blk=in.blocks[inodeblk]; 
+            }
             //if all data we want to write can be put in same block
             if(nbytes<(fsd.blocksz-inodeoffset)){
                 bwrite(0,dst_blk,inodeoffset,buf,nbytes);
@@ -239,11 +306,19 @@ int fwrite(int fd, void *buf, int nbytes)
                     return orig_nbytes-nbytes;
                 }
                 bwrite(0,dst_blk,inodeoffset,buf,fsd.blocksz-inodeoffset);
+#if DEBUG
+                printf("debug:fwrite:inodeoffset=%d,nbytes=%d,inodeblk=%d,dstblk=%d\n\r",inodeoffset,nbytes,inodeblk,dst_blk);
+                char tempbuf[512];
+                memcpy(tempbuf,buf,512);
+                printf("debug:wrote:%s\n\r",tempbuf);
+#endif
+                
                 buf+=(fsd.blocksz-inodeoffset);
                 nbytes-=(fsd.blocksz-inodeoffset);
                 ft.fileptr+=(fsd.blocksz-inodeoffset);
                 //cross over to next block
-                dst_blk=in.blocks[++inodeblk];
+                //dst_blk=in.blocks[++inodeblk];
+                inodeblk++;
                 inodeoffset=0;
             }
         }
