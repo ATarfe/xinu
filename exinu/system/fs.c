@@ -107,7 +107,7 @@ int fopen(char *filename, int flags) // TO-DO: what to do with flags?
         //check if file name is valid. i.e., no file with same name exists
         int i,fileloc=-1;
         for(i=0;i<dir.numentries;i++){
-            if(strcmp(filename,dir.entry[i].name)){
+            if(!strcmp(filename,dir.entry[i].name)){
                 fileloc=i;
             }
         }
@@ -167,9 +167,12 @@ int fcreate(char *filename, int mode)
         ft.state=FSTATE_OPEN;
         ft.fileptr=0;
         ft.de=&(dir.entry[dir.numentries++]);
+        //printf("dir.num=%d\n\r",dir.numentries);
         strcpy((ft.de)->name, filename);
         //copy ft to oft:
         memcpy(oft+fd,&ft,sizeof(struct filetable));
+        //write back to rootdir
+        memcpy(&(fsd.root_dir),&dir,sizeof(struct directory));
         struct inode in;
         in.id=inode_id++;
         in.type=INODE_TYPE_FILE;
@@ -217,7 +220,8 @@ int fread(int fd, void *buf, int nbytes)
     if (inodeblk<INODEBLOCKS){
         int dst_blk=in.blocks[inodeblk];
 #if DEBUG
-        printf("in.blocks=%x\n",in.blocks);
+        struct directory dir=fsd.root_dir;
+        printf("in.blocks=%x, rootdir count=%d\n",in.blocks,dir.numentries);
 #endif
         while(nbytes>0){
             //if all data we want is in same block
