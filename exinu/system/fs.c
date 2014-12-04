@@ -210,6 +210,10 @@ int fseek(int fd, int offset)
     struct filetable ft=oft[fd];
     //update fileptr
     offset=ft.fileptr+offset;
+    if(offset<0){
+        fprintf(stderr,"fs::fseek: offset exceeds file boundary. resetting pointer to beginning of file\n\r");
+        offset=0;
+    }
     memcpy(&((oft+fd)->fileptr),&offset,sizeof(int));
     return fd;
 }
