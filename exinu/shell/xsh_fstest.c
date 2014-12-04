@@ -81,6 +81,7 @@ void testbitmask(void);
     // Now my file offset is pointing at EOF file, i need to bring it back to start of file
     // Assuming here implementation of fseek is like "original_offset = original_offset + 
     // input_offset_from_fseek"
+    //printf("debug:fstest:rval=%d\n",rval);
     fseek(fd,-rval); 
     
     //read the file 
@@ -100,6 +101,11 @@ void testbitmask(void);
     {
         printf("\n\rReturn val for fclose : %d",rval);
     }
+
+    fd=fopen("Test_File",0);
+    char buf3[10];
+    fread(fd,buf3,10);
+    printf("buf3=%s\n\r",buf3);
 
 clean_up:
     memfree(buf1,SIZE);

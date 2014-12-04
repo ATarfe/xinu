@@ -109,6 +109,10 @@ int fopen(char *filename, int flags) // TO-DO: what to do with flags?
         for(i=0;i<dir.numentries;i++){
             if(!strcmp(filename,dir.entry[i].name)){
                 fileloc=i;
+#if DEBUG
+                printf("debug:fileloc=%d\n\r",i);
+                printf("debug:dir.entry[0].inode_num=%d\n\r",dir.entry[0].inode_num);
+#endif
             }
         }
         if(fileloc==-1){
@@ -121,16 +125,18 @@ int fopen(char *filename, int flags) // TO-DO: what to do with flags?
         ft.fileptr=0;
         ft.de=&(dir.entry[fileloc]);
         strcpy((ft.de)->name, filename);
-        //copy ft to oft:
-        memcpy(oft+fd,&ft,sizeof(struct filetable));
         struct inode in;
         //read file metadata inode:
         get_inode_by_num(0,ft.de->inode_num,&in);
+        //printf("in.id=%d\n",ft.de->inode_num);
         //cp in to ft:
         memcpy(&(ft.in),&in,sizeof(struct inode));
+        //copy ft to oft:
+        memcpy(oft+fd,&ft,sizeof(struct filetable));
 
 #if DEBUG
         printf("debug: file %s opened. fd=%d,oft[%d].state=%d\n\r",filename,fd,fd,oft[fd].state);
+        printf("debug: open: ft.de->ft.in.blocks[0]=%d\n\r",ft.in.blocks[0]);
 #endif
          
         return fd;
@@ -169,8 +175,6 @@ int fcreate(char *filename, int mode)
         ft.de=&(dir.entry[dir.numentries++]);
         //printf("dir.num=%d\n\r",dir.numentries);
         strcpy((ft.de)->name, filename);
-        //copy ft to oft:
-        memcpy(oft+fd,&ft,sizeof(struct filetable));
         //write back to rootdir
         memcpy(&(fsd.root_dir),&dir,sizeof(struct directory));
         struct inode in;
@@ -186,10 +190,14 @@ int fcreate(char *filename, int mode)
         memcpy(&(ft.in),&in,sizeof(struct inode));
         //write inode_id to dirent:inode_num
         memcpy(&(ft.de->inode_num),&(in.id),sizeof(int));
+        memcpy(&(fsd.root_dir.entry[dir.numentries-1].inode_num),&(in.id),sizeof(int));
+        //copy ft to oft:
+        memcpy(oft+fd,&ft,sizeof(struct filetable));
         //update fsystem
         fsd.inodes_used++;
 #if DEBUG
-        printf("debug: file %s created. fd=%d,oft[%d].state=%d\n\r",filename,fd,fd,oft[fd].state);
+        printf("debug: create:fsd.root_dir.entry[dir.numentries-1].inode_num=%d\n\r",fsd.root_dir.entry[dir.numentries-1].inode_num);
+        printf("debug: file %s created. fd=%d,oft[%d].state=%d,ft.in.id=%d\n\r",filename,fd,fd,oft[fd].state,ft.in.id);
 #endif
          
         return fd;
@@ -201,11 +209,13 @@ int fseek(int fd, int offset)
     //first, get the file table entry:
     struct filetable ft=oft[fd];
     //update fileptr
-    ft.fileptr=offset;
+    offset=ft.fileptr+offset;
+    memcpy(&((oft+fd)->fileptr),&offset,sizeof(int));
     return fd;
 }
 int fread(int fd, void *buf, int nbytes)
 {
+    //printf("fd at fread=%d\n",fd);
     int orig_nbytes=nbytes;
     //first, get the file table entry:
     struct filetable ft=oft[fd];
@@ -218,15 +228,16 @@ int fread(int fd, void *buf, int nbytes)
     int inodeblk= (ft.fileptr / fsd.blocksz);
     int inodeoffset=(ft.fileptr % fsd.blocksz);
     if (inodeblk<INODEBLOCKS){
-        int dst_blk=in.blocks[inodeblk];
+        int dst_blk=ft.in.blocks[inodeblk];
 #if DEBUG
         struct directory dir=fsd.root_dir;
-        printf("in.blocks=%x, rootdir count=%d\n",in.blocks,dir.numentries);
+        printf("in.blocks=%x, rootdir count=%d,nbytes=%d\n",in.blocks,dir.numentries,nbytes);
 #endif
         while(nbytes>0){
             //if all data we want is in same block
             if(nbytes<(fsd.blocksz-inodeoffset)){
                 bread(0,dst_blk,inodeoffset,buf,nbytes);
+                //printf("debug:read:buf=%s,dst_blk=%d,inodeoffset=%d\n",buf,dst_blk,inodeoffset);
                 //incr fileptr:
                 ft.fileptr+=nbytes;
                 buf+=nbytes;
@@ -246,6 +257,8 @@ int fread(int fd, void *buf, int nbytes)
                 buf+=(fsd.blocksz-inodeoffset);
                 nbytes-=(fsd.blocksz-inodeoffset);
                 ft.fileptr+=(fsd.blocksz-inodeoffset);
+                //write ft to oft
+                memcpy(oft+fd,&ft,sizeof(struct filetable));
                 //cross over to next block
                 dst_blk=in.blocks[++inodeblk];
                 inodeoffset=0;
@@ -278,7 +291,7 @@ int fwrite(int fd, void *buf, int nbytes)
         int dst_blk;
         while(nbytes>0){
 #if DEBUG
-            printf("ft.in=%x\n",ft.in);
+            printf("ft.in.id=%d\n",ft.in.id);
 #endif
             if(in.blocks[inodeblk]==0){
                 //alloc new block
@@ -290,6 +303,14 @@ int fwrite(int fd, void *buf, int nbytes)
 #endif
                 //copy in back to ft.in:
                 memcpy(&((oft+fd)->in),&(in),sizeof(struct inode));
+                ft.in=in;
+                //write in back to the inode on disk
+                put_inode_by_num(0,in.id,&in);
+#if DEBUG
+                struct inode temp;
+                get_inode_by_num(0,in.id,&temp);
+                printf("write. updated inode %d, inode.block[0]=%d\n",temp.id,temp.blocks[0]);
+#endif
                 //mark that block as visited...
                 setmaskbit(dst_blk);
             }
@@ -302,6 +323,8 @@ int fwrite(int fd, void *buf, int nbytes)
                 //incr fileptr:
                 ft.fileptr+=nbytes;
                 nbytes=0;
+                //write to oft:
+                memcpy(oft+fd,&ft,sizeof(struct filetable));
                 return orig_nbytes;
             }
             else{
@@ -320,6 +343,8 @@ int fwrite(int fd, void *buf, int nbytes)
                 buf+=(fsd.blocksz-inodeoffset);
                 nbytes-=(fsd.blocksz-inodeoffset);
                 ft.fileptr+=(fsd.blocksz-inodeoffset);
+                //write to oft:
+                memcpy(oft+fd,&ft,sizeof(struct filetable));
                 //cross over to next block
                 //dst_blk=in.blocks[++inodeblk];
                 inodeblk++;
