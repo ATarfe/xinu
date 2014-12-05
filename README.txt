@@ -1,15 +1,12 @@
-README for Assignment 7
+README for Assignment 8
 P536 - Advanced Operating Systems
-November 6, 2014
+December 4, 2014
 
 Authors:
 Peter Zhang (yz79)
 Eriya Terada (eterada)
 
+We implemented the filesystem as described in the assignment. For mor
+information, please consult Report-6.txt.
 
-We implemented a shared memory IPC mechanism for our Xinu system as described by the assignment instructions.
-
-You may use the command "shmipc" to see a working implementation of the shared memory,
-where we basically create three shared segments, write to them, read from them, and delete
-them.
-
+Please use the command fstest to see how well our filesystem works!!
